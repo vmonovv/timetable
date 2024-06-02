@@ -52,10 +52,10 @@
         >
           <div class="flex flex-col space-y-2 text-center">
             <h1 class="text-2xl font-semibold tracking-tight">
-              Создать аккаунт
+             Войти в аккаунт
             </h1>
             <p class="text-sm text-muted-foreground">
-              Введите свой адрес электронной почты ниже, чтобы создать свою
+              Введите свой адрес электронной почты и пароль ниже, чтобы войти в свою
               учетную запись
             </p>
           </div>
