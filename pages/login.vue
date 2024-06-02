@@ -38,9 +38,8 @@
         </div>
         <div class="relative z-20 mt-auto">
           <blockquote class="space-y-2">
-            <p class="text-lg">
-              &ldquo;Сервис для автоматизированного составления расписания
-              работы врачей&rdquo;
+            <p class="text-lg max-w-[500px]">
+              &ldquo;Сервис автоматизации составления графика работы врачей-рентгенологов&rdquo;
             </p>
             <footer class="text-sm">such.ae</footer>
           </blockquote>
