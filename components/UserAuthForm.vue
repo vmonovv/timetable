@@ -21,7 +21,7 @@ async function onSubmit(event: Event) {
     <form @submit="onSubmit">
       <div class="grid gap-2">
         <div class="grid gap-1">
-          <Label class="sr-only" for="email"> Email </Label>
+          <Label class="sr-only" for="email">Email</Label>
           <Input
             id="email"
             placeholder="Email"

@@ -6,7 +6,7 @@
 <template>
   <div>
     <div
-      class="container relative  h-[800px] flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-2 lg:px-0"
+      class="container relative h-[100vh] flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-2 lg:px-0"
     >
       <Button
         href="#"
@@ -39,9 +39,12 @@
         <div class="relative z-20 mt-auto">
           <blockquote class="space-y-2">
             <p class="text-lg max-w-[500px]">
-              &ldquo;Сервис автоматизации составления графика работы врачей-рентгенологов&rdquo;
+              &ldquo;Сервис автоматизации составления графика работы
+              врачей-рентгенологов&rdquo;
             </p>
-            <footer class="text-sm">such.ae</footer>
+            <footer class="text-sm">
+              <a target="_blank" href="https://such.ae">such.ae</a>
+            </footer>
           </blockquote>
         </div>
       </div>
@@ -51,11 +54,11 @@
         >
           <div class="flex flex-col space-y-2 text-center">
             <h1 class="text-2xl font-semibold tracking-tight">
-             Войти в аккаунт
+              Войти в аккаунт
             </h1>
             <p class="text-sm text-muted-foreground">
-              Введите свой адрес электронной почты и пароль ниже, чтобы войти в свою
-              учетную запись
+              Введите свой адрес электронной почты и пароль ниже, чтобы войти в
+              свою учетную запись
             </p>
           </div>
           <UserAuthForm />

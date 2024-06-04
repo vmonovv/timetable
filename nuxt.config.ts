@@ -7,5 +7,6 @@ export default defineNuxtConfig({
     "nuxt-swiper",
     "@pinia/nuxt",
     "shadcn-nuxt",
+    "@hebilicious/vue-query-nuxt",
   ],
 });
