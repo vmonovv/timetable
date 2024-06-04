@@ -5,21 +5,22 @@ import type {
   SortingState,
   VisibilityState,
 } from "@tanstack/vue-table";
-// import {
-//   FlexRender,
-//   getCoreRowModel,
-//   getFacetedRowModel,
-//   getFacetedUniqueValues,
-//   getFilteredRowModel,
-//   getPaginationRowModel,
-//   getSortedRowModel,
-//   useVueTable,
-// } from "@tanstack/vue-table";
+import {
+  FlexRender,
+  getCoreRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useVueTable,
+} from "@tanstack/vue-table";
 
-// import type { Task } from "../data/schema";
-// import DataTablePagination from "./DataTablePagination.vue";
-// import DataTableToolbar from "./DataTableToolbar.vue";
-// import { valueUpdater } from "@/lib/utils";
+import { ref } from "vue";
+import type { Task } from "../data/schema";
+import DataTablePagination from "./DataTablePagination.vue";
+import DataTableToolbar from "./DataTableToolbar.vue";
+import { valueUpdater } from "@/lib/utils";
 
 interface DataTableProps {
   columns: ColumnDef<Task, any>[];
@@ -72,7 +73,7 @@ const table = useVueTable({
 
 <template>
   <div class="space-y-4">
-    <!-- <DataTableToolbar :table="table" /> -->
+    <DataTableToolbar :table="table" />
     <div class="rounded-md border">
       <Table>
         <TableHeader>

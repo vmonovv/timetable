@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import type { Column } from "@tanstack/vue-table";
-import type { Component } from "vue";
-import { computed } from "vue";
 import type { Task } from "../data/schema";
-import PlusCircledIcon from "~icons/radix-icons/plus-circled";
-import CheckIcon from "~icons/radix-icons/check";
 
 import { cn } from "@/lib/utils";
 
@@ -30,7 +26,7 @@ const selectedValues = computed(
   <Popover>
     <PopoverTrigger as-child>
       <Button variant="outline" size="sm" class="h-8 border-dashed">
-        <PlusCircledIcon class="mr-2 h-4 w-4" />
+        <Icon class="mr-2 h-4 w-4" name="ic:round-add-circle-outline" />
         {{ title }}
         <template v-if="selectedValues.size > 0">
           <Separator orientation="vertical" class="mx-2 h-4" />
@@ -103,7 +99,7 @@ const selectedValues = computed(
                   )
                 "
               >
-                <CheckIcon :class="cn('h-4 w-4')" />
+                <Icon :class="cn('h-4 w-4')" name="ic:baseline-check" />
               </div>
               <component
                 :is="option.icon"

@@ -1,12 +1,7 @@
-import { h } from "vue";
-// import ArrowDownIcon from "~icons/radix-icons/arrow-down";
-// import ArrowRightIcon from "~icons/radix-icons/arrow-right";
-// import ArrowUpIcon from "~icons/radix-icons/arrow-up";
-// import CheckCircledIcon from "~icons/radix-icons/check-circled";
-// import CircleIcon from "~icons/radix-icons/circle";
-// import CrossCircledIcon from "~icons/radix-icons/cross-circled";
-// import QuestionMarkCircledIcon from "~icons/radix-icons/question-mark-circled";
-// import StopwatchIcon from "~icons/radix-icons/stopwatch";
+// import CrossCircledIcon from '~icons/radix-icons/cross-circled'
+// import QuestionMarkCircledIcon from '~icons/radix-icons/question-mark-circled'
+
+import { Icon } from "#components";
 
 export const labels = [
   {
@@ -27,44 +22,44 @@ export const statuses = [
   {
     value: "backlog",
     label: "Backlog",
-    // icon: h(QuestionMarkCircledIcon),
+    icon: h(Icon, { name: "formkit:arrowdown" }),
   },
   {
     value: "todo",
     label: "Todo",
-    // icon: h(CircleIcon),
+    icon: h(Icon, { name: "ph:circle" }),
   },
   {
     value: "in progress",
     label: "In Progress",
-    // icon: h(StopwatchIcon),
+    icon: h(Icon, { name: "solar:stopwatch-linear" }),
   },
+
   {
     value: "done",
     label: "Done",
-    // icon: h(CheckCircledIcon),
+    icon: h(Icon, { name: "solar:check-circle-outline" }),
   },
   {
     value: "canceled",
     label: "Canceled",
-    // icon: h(CrossCircledIcon),
+    icon: h(Icon, { name: "solar:close-circle-outline" }),
   },
 ];
-
 export const priorities = [
   {
     label: "Low",
     value: "low",
-    // icon: h(ArrowDownIcon),
+    icon: h(Icon, { name: "ic:baseline-arrow-downward" }),
   },
   {
     label: "Medium",
     value: "medium",
-    // icon: h(ArrowRightIcon),
+    icon: h(Icon, { name: "ic:baseline-arrow-downward" }),
   },
   {
     label: "High",
     value: "high",
-    // icon: h(ArrowUpIcon),
+    icon: h(Icon, { name: "ic:outline-arrow-upward" }),
   },
 ];

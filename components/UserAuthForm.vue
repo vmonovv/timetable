@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { ref } from "vue";
-// import LucideSpinner from "~icons/lucide/loader-2";
-// import GitHubLogo from "~icons/radix-icons/github-logo";
 
 import { cn } from "@/lib/utils";
 

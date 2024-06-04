@@ -1,20 +1,13 @@
-<script setup lang="ts">
-// import {
-//   Avatar,
-//   AvatarFallback,
-//   AvatarImage,
-// } from '@/lib/registry/new-york/ui/avatar'
-// import { Button } from '@/lib/registry/new-york/ui/button'
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <DropdownMenu>
     <DropdownMenuTrigger as-child>
       <Button variant="ghost" class="relative h-8 w-8 rounded-full">
-        <!-- <Avatar class="h-9 w-9">
+        <Avatar class="h-9 w-9">
           <AvatarImage src="/avatars/03.png" alt="@shadcn" />
           <AvatarFallback>SC</AvatarFallback>
-        </Avatar> -->
+        </Avatar>
       </Button>
     </DropdownMenuTrigger>
     <DropdownMenuContent class="w-56" align="end">
