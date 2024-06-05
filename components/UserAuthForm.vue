@@ -1,16 +1,31 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { supabase } from "~/supabase";
 
 import { cn } from "@/lib/utils";
 
 const isLoading = ref(false);
+const email = ref("");
+const password = ref("");
+const error = ref("");
+
 async function onSubmit(event: Event) {
   event.preventDefault();
   isLoading.value = true;
+  error.value = "";
 
-  setTimeout(() => {
-    isLoading.value = false;
-  }, 3000);
+  const { data, error: loginError } = await supabase.auth.signInWithPassword({
+    email: email.value,
+    password: password.value,
+  });
+
+  if (loginError) {
+    error.value = loginError.message;
+  } else {
+    console.log("Logged in successfully:", data.user);
+  }
+
+  isLoading.value = false;
 }
 </script>
 
@@ -21,6 +36,7 @@ async function onSubmit(event: Event) {
         <div class="grid gap-1">
           <Label class="sr-only" for="email">Email</Label>
           <Input
+            v-model="email"
             id="email"
             placeholder="Email"
             type="email"
@@ -30,11 +46,12 @@ async function onSubmit(event: Event) {
             :disabled="isLoading"
           />
           <Input
+            v-model="password"
             id="password"
             placeholder="Пароль"
             type="password"
             auto-capitalize="none"
-            auto-complete="email"
+            auto-complete="current-password"
             auto-correct="off"
             :disabled="isLoading"
           />
@@ -48,6 +65,7 @@ async function onSubmit(event: Event) {
           />
           Войти
         </Button>
+        <div v-if="error" class="text-red-500">{{ error }}</div>
       </div>
     </form>
     <div class="relative">

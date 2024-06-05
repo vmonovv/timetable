@@ -1,4 +1,6 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+import dotenv from "dotenv";
+dotenv.config();
+
 export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
@@ -7,5 +9,18 @@ export default defineNuxtConfig({
     "nuxt-swiper",
     "@pinia/nuxt",
     "shadcn-nuxt",
+    "@nuxtjs/supabase",
   ],
+  runtimeConfig: {
+    public: {
+      supabaseUrl: process.env.SUPABASE_URL,
+      supabaseKey: process.env.SUPABASE_KEY,
+    },
+  },
+  supabase: {
+    redirectOptions: {
+      login: "/login",
+      callback: "/",
+    },
+  },
 });
