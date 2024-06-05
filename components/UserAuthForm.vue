@@ -20,7 +20,7 @@ async function onSubmit(event: Event) {
   if (loginError) {
     error.value = loginError.message;
   } else {
-    
+    location.assign("/");
     console.log("Logged in successfully:", data.user);
   }
 
