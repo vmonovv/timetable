@@ -11,16 +11,4 @@ export default defineNuxtConfig({
     "shadcn-nuxt",
     "@nuxtjs/supabase",
   ],
-  runtimeConfig: {
-    public: {
-      supabaseUrl: process.env.SUPABASE_URL,
-      supabaseKey: process.env.SUPABASE_KEY,
-    },
-  },
-  supabase: {
-    redirectOptions: {
-      login: "/login",
-      callback: "/",
-    },
-  },
 });

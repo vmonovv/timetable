@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { supabase } from "~/supabase";
-
+const supabase = useSupabaseClient();
 import { cn } from "@/lib/utils";
 
 const isLoading = ref(false);
@@ -22,6 +20,7 @@ async function onSubmit(event: Event) {
   if (loginError) {
     error.value = loginError.message;
   } else {
+    
     console.log("Logged in successfully:", data.user);
   }
 
