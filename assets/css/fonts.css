@@ -1,0 +1,55 @@
+@font-face {
+    font-family: "vmonovv";
+    src: url("/fonts/vmonovv-Bold.eot");
+    src: local("vmonovv-Bold"),
+      url("/fonts/vmonovv-Bold.eot") format("embedded-opentype"),
+      url("/fonts/vmonovv-Bold.woff2") format("woff2"),
+      url("/fonts/vmonovv-Bold.woff") format("woff"),
+      url("/fonts/vmonovv-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: "vmonovv";
+    src: url("/fonts/vmonovv-Light.eot");
+    src: local("vmonovv-Light"),
+      url("/fonts/vmonovv-Light.eot") format("embedded-opentype"),
+      url("/fonts/vmonovv-Light.woff2") format("woff2"),
+      url("/fonts/vmonovv-Light.woff") format("woff"),
+      url("/fonts/vmonovv-Light.ttf") format("truetype");
+    font-weight: 300;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: "vmonovv";
+    src: url("/fonts/vmonovv-Medium.eot");
+    src: local("vmonovv-Medium"),
+      url("/fonts/vmonovv-Medium.eot") format("embedded-opentype"),
+      url("/fonts/vmonovv-Medium.woff2") format("woff2"),
+      url("/fonts/vmonovv-Medium.woff") format("woff"),
+      url("/fonts/vmonovv-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "vmonovv";
+    src: local("vmonovv-Heavy"),
+      url("/fonts/vmonovv-Heavy.eot") format("embedded-opentype"),
+      url("/fonts/vmonovv-Heavy.woff2") format("woff2"),
+      url("/fonts/vmonovv-Heavy.woff") format("woff"),
+      url("/fonts/vmonovv-Heavy.ttf") format("truetype");
+    font-weight: 900;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "vmonovv";
+    src: local("vmonovv-Roman"),
+      url("/fonts/vmonovv-Roman.eot") format("embedded-opentype"),
+      url("/fonts/vmonovv-Roman.woff2") format("woff2"),
+      url("/fonts/vmonovv-Roman.woff") format("woff"),
+      url("/fonts/vmonovv-Roman.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+  }

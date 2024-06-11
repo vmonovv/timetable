@@ -1,0 +1,44 @@
+[
+  {
+    "type": "Денситометрия",
+    "quantity": 204,
+    "isEnough": true,
+    "isFixable": true,
+    "lack": 0
+  },
+  {
+    "type": "КТ",
+    "quantity": 20,
+    "isEnough": false,
+    "isFixable": false,
+    "lack": 20
+  },
+  {
+    "type": "Маммография",
+    "quantity": 40,
+    "isEnough": true,
+    "isFixable": true,
+    "lack": 10
+  },
+  {
+    "type": "МРТ",
+    "quantity": 80,
+    "isEnough": false,
+    "isFixable": false,
+    "lack": 13
+  },
+  {
+    "type": "ФЛГ",
+    "quantity": 80,
+    "isEnough": true,
+    "isFixable": false,
+    "lack": 0
+  },
+  {
+    "type": "РГ",
+    "quantity": 20,
+    "isEnough": false,
+    "isFixable": true,
+    "lack": 5
+  }
+]

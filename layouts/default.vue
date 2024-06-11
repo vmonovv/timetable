@@ -6,16 +6,16 @@ const isLoadingStore = useIsLoadingStore();
 const store = useAuthStore();
 const router = useRouter();
 
-onMounted(async () => {
-  try {
-    const user = await account.get();
-    if (user) store.set(user);
-  } catch (error) {
-    // router.push("/login");
-  } finally {
-    isLoadingStore.set(false);
-  }
-});
+// onMounted(async () => {
+//   try {
+//     const user = await account.get();
+//     if (user) store.set(user);
+//   } catch (error) {
+//     // router.push("/login");
+//   } finally {
+//     isLoadingStore.set(false);
+//   }
+// });
 </script>
 
 <template>

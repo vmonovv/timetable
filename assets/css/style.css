@@ -3,9 +3,9 @@
 }
 
 body {
-    font-family: "Inter", sans-serif;
+    font-family: 'vmonovv';
     font-weight: 300;
-    font-display: swap;
+    letter-spacing: 0.4px;
 }
 
 
@@ -34,8 +34,8 @@ body {
 
 @media (min-width: 640px) {
     .t {
-        font-size: 4.5vw;
-        font-family: " TTHoves", sans-serif;
+        font-size: 2vw;
+
     }
 }
 
@@ -43,7 +43,7 @@ body {
     font-weight: 500;
     font-size: 8vw;
     line-height: 100%;
-    font-family: "TTHoves", sans-serif;
+
 }
 
 @media (min-width: 640px) {
@@ -55,7 +55,7 @@ body {
 .mint {
     font-size: 6.3vw;
     line-height: 100%;
-    font-family: "TTHoves", sans-serif;
+
     font-weight: 500;
 }
 

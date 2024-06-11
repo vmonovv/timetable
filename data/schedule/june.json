@@ -1,0 +1,250 @@
+[
+  {
+    "break_minutes": 60,
+    "date": "2024-06-01",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Выходной"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-02",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Выходной"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-03",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Форс мажор"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-04",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Рабочий день"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-05",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Рабочий день"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-06",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Выходной"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-07",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Выходной"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-08",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Рабочий день"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-09",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Рабочий день"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-10",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Рабочий день"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-11",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Выходной"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-12",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Выходной"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-13",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Рабочий день"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-14",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Рабочий день"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-15",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Рабочий день"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-16",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Выходной"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-17",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Выходной"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-18",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Рабочий день"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-19",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Рабочий день"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-20",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Выходной"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-21",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Выходной"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-22",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Рабочий день"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-23",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Рабочий день"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-24",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Выходной"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-25",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Выходной"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-26",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Рабочий день"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-27",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Рабочий день"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-28",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Рабочий день"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-29",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Выходной"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-30",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Выходной"
+  },
+  {
+    "break_minutes": 60,
+    "date": "2024-06-31",
+    "end_time": "17:00",
+    "hours_worked": 7.0,
+    "start_time": "09:00",
+    "type": "Рабочий день"
+  }
+]

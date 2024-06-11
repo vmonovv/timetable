@@ -3,63 +3,22 @@
 
 import { Icon } from "#components";
 
-export const labels = [
+export const types = [
   {
-    value: "bug",
-    label: "Bug",
+    value: "Выходной",
+    label: "Выходной",
   },
   {
-    value: "feature",
-    label: "Feature",
+    value: "Рабочий день",
+    label: "Рабочий день",
   },
   {
-    value: "documentation",
-    label: "Documentation",
+    value: "Форс мажор",
+    label: "Форс мажор",
   },
 ];
 
-export const statuses = [
-  {
-    value: "backlog",
-    label: "Backlog",
-    icon: h(Icon, { name: "formkit:arrowdown" }),
-  },
-  {
-    value: "todo",
-    label: "Todo",
-    icon: h(Icon, { name: "ph:circle" }),
-  },
-  {
-    value: "in progress",
-    label: "In Progress",
-    icon: h(Icon, { name: "solar:stopwatch-linear" }),
-  },
 
-  {
-    value: "done",
-    label: "Done",
-    icon: h(Icon, { name: "solar:check-circle-outline" }),
-  },
-  {
-    value: "canceled",
-    label: "Canceled",
-    icon: h(Icon, { name: "solar:close-circle-outline" }),
-  },
-];
-export const priorities = [
-  {
-    label: "Low",
-    value: "low",
-    icon: h(Icon, { name: "ic:baseline-arrow-downward" }),
-  },
-  {
-    label: "Medium",
-    value: "medium",
-    icon: h(Icon, { name: "ic:baseline-arrow-downward" }),
-  },
-  {
-    label: "High",
-    value: "high",
-    icon: h(Icon, { name: "ic:outline-arrow-upward" }),
-  },
-];
+
+
+

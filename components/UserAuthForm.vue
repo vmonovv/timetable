@@ -1,5 +1,6 @@
 <script setup lang="ts">
-const supabase = useSupabaseClient();
+// const supabase = useSupabaseClient();
+
 import { cn } from "@/lib/utils";
 
 const isLoading = ref(false);
@@ -7,25 +8,25 @@ const email = ref("");
 const password = ref("");
 const error = ref("");
 
-async function onSubmit(event: Event) {
-  event.preventDefault();
-  isLoading.value = true;
-  error.value = "";
+// async function onSubmit(event: Event) {
+//   event.preventDefault();
+//   isLoading.value = true;
+//   error.value = "";
 
-  const { data, error: loginError } = await supabase.auth.signInWithPassword({
-    email: email.value,
-    password: password.value,
-  });
+//   const { data, error: loginError } = await supabase.auth.signInWithPassword({
+//     email: email.value,
+//     password: password.value,
+//   });
 
-  if (loginError) {
-    error.value = loginError.message;
-  } else {
-    location.assign("/");
-    console.log("Logged in successfully:", data.user);
-  }
+//   if (loginError) {
+//     error.value = loginError.message;
+//   } else {
+//     location.assign("/");
+//     console.log("Logged in successfully:", data.user);
+//   }
 
-  isLoading.value = false;
-}
+//   isLoading.value = false;
+// }
 </script>
 
 <template>
