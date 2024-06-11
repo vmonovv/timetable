@@ -16,8 +16,8 @@ async function onSubmit(event: Event) {
   const data = await $fetch("http://176.109.104.88:80/login", {
     method: "POST",
     body: {
-      email: email,
-      password: password,
+      email: email.value,
+      password: password.value,
     },
   });
 
