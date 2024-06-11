@@ -8,25 +8,21 @@ const email = ref("");
 const password = ref("");
 const error = ref("");
 
-// async function onSubmit(event: Event) {
-//   event.preventDefault();
-//   isLoading.value = true;
-//   error.value = "";
+async function onSubmit(event: Event) {
+  event.preventDefault();
+  isLoading.value = true;
+  error.value = "";
 
-//   const { data, error: loginError } = await supabase.auth.signInWithPassword({
-//     email: email.value,
-//     password: password.value,
-//   });
+  const data = await $fetch("http://176.109.104.88:80/login", {
+    method: "POST",
+    body: {
+      email: email,
+      password: password,
+    },
+  });
 
-//   if (loginError) {
-//     error.value = loginError.message;
-//   } else {
-//     location.assign("/");
-//     console.log("Logged in successfully:", data.user);
-//   }
-
-//   isLoading.value = false;
-// }
+  console.log(data);
+}
 </script>
 
 <template>
