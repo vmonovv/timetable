@@ -1,4 +1,11 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const router = useRouter();
+const authStore = useAuthStore();
+const logout = () => {
+  authStore.clear();
+  router.push("/login");
+};
+</script>
 
 <template>
   <DropdownMenu>
@@ -36,7 +43,7 @@
         <!-- <DropdownMenuItem>New Team</DropdownMenuItem> -->
       </DropdownMenuGroup>
       <DropdownMenuSeparator />
-      <DropdownMenuItem>
+      <DropdownMenuItem @click="logout">
         Выйти
         <!-- <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut> -->
       </DropdownMenuItem>

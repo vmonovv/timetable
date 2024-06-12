@@ -22,7 +22,7 @@ const isActive = (path: string): boolean => {
             >
           </li>
           <li class="text-[15px] mx-3">
-            <NuxtLink :class="{ active: isActive('/request') }" to="/request"
+            <NuxtLink :class="{ active: isActive('/requests') }" to="/requests"
               >Заявки</NuxtLink
             >
           </li>

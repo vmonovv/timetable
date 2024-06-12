@@ -17,8 +17,6 @@ import {
 } from "@tanstack/vue-table";
 
 import type { Task } from "@/data/schema";
-import DataTablePagination from "../../doctors/schedule/DataTablePagination.vue";
-import DataTableToolbar from "../../doctors/schedule/DataTableToolbar.vue";
 import { valueUpdater } from "@/lib/utils";
 
 interface DataTableProps {
@@ -89,7 +87,7 @@ const table = useVueTable({
             </TableHead>
           </TableRow>
         </TableHeader>
-      
+
         <TableBody>
           <template v-if="table.getRowModel().rows?.length">
             <TableRow
@@ -112,8 +110,6 @@ const table = useVueTable({
             </TableCell>
           </TableRow>
         </TableBody>
-
-        
       </Table>
     </div>
 

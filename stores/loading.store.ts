@@ -1,6 +1,6 @@
 export const useIsLoadingStore = defineStore('isLoading', {
 	state: () => ({
-		isLoading: true,
+		isLoading: false,
 	}),
 	actions: {
 		set(data: boolean) {

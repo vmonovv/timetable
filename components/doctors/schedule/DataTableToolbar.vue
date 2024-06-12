@@ -3,8 +3,6 @@ import type { Table } from "@tanstack/vue-table";
 import type { Task } from "../data/schema";
 
 import { types } from "@/data/data";
-import DataTableFacetedFilter from "./DataTableFacetedFilter.vue";
-import DataTableViewOptions from "./DataTableViewOptions.vue";
 
 interface DataTableToolbarProps {
   table: Table<Task>;
