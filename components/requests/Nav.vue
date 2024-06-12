@@ -1,103 +1,85 @@
 <script lang="ts" setup>
-import { formatDistanceToNow } from "date-fns";
-import type { Mail } from "@/data/mails";
-
+import { Icon } from "@iconify/vue";
 import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 
-interface MailListProps {
-  items: Mail[];
+export interface LinkProp {
+  title: string;
+  label?: string;
+  icon: string;
+  variant: "default" | "ghost";
 }
 
-defineProps<MailListProps>();
-const selectedMail = defineModel<string>("selectedMail", { required: false });
-
-function getBadgeVariantFromLabel(label: string) {
-  if (["work"].includes(label.toLowerCase())) return "default";
-
-  if (["personal"].includes(label.toLowerCase())) return "outline";
-
-  return "secondary";
+interface NavProps {
+  isCollapsed: boolean;
+  links: LinkProp[];
 }
+
+defineProps<NavProps>();
 </script>
 
 <template>
-  <ScrollArea class="h-screen flex">
-    <div class="flex-1 flex flex-col gap-2 p-4 pt-0">
-      <TransitionGroup name="list" appear>
-        <button
-          v-for="item of items"
-          :key="item.id"
+  <div
+    :data-collapsed="isCollapsed"
+    class="group flex flex-col gap-4 py-2 data-[collapsed=true]:py-2"
+  >
+    <nav
+      class="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2"
+    >
+      <template v-for="(link, index) of links">
+        <Tooltip v-if="isCollapsed" :key="`1-${index}`" :delay-duration="0">
+          <TooltipTrigger as-child>
+            <a
+              href="#"
+              :class="
+                cn(
+                  buttonVariants({ variant: link.variant, size: 'icon' }),
+                  'h-9 w-9',
+                  link.variant === 'default' &&
+                    'dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white'
+                )
+              "
+            >
+              <Icon :icon="link.icon" class="size-4" />
+              <span class="sr-only">{{ link.title }}</span>
+            </a>
+          </TooltipTrigger>
+          <TooltipContent side="right" class="flex items-center gap-4">
+            {{ link.title }}
+            <span v-if="link.label" class="ml-auto text-muted-foreground">
+              {{ link.label }}
+            </span>
+          </TooltipContent>
+        </Tooltip>
+
+        <a
+          v-else
+          :key="`2-${index}`"
+          href="#"
           :class="
             cn(
-              'flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent',
-              selectedMail === item.id && 'bg-muted'
+              buttonVariants({ variant: link.variant, size: 'sm' }),
+              link.variant === 'default' &&
+                'dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white',
+              'justify-start'
             )
           "
-          @click="selectedMail = item.id"
         >
-          <div class="flex w-full flex-col gap-1">
-            <div class="flex items-center">
-              <div class="flex items-center gap-2">
-                <div class="font-semibold">
-                  {{ item.name }}
-                </div>
-                <span
-                  v-if="!item.read"
-                  class="flex h-2 w-2 rounded-full bg-blue-600"
-                />
-              </div>
-              <div
-                :class="
-                  cn(
-                    'ml-auto text-xs',
-                    selectedMail === item.id
-                      ? 'text-foreground'
-                      : 'text-muted-foreground'
-                  )
-                "
-              >
-                {{
-                  formatDistanceToNow(new Date(item.date), { addSuffix: true })
-                }}
-              </div>
-            </div>
-
-            <div class="text-xs font-medium">
-              {{ item.subject }}
-            </div>
-          </div>
-          <div class="line-clamp-2 text-xs text-muted-foreground">
-            {{ item.text.substring(0, 300) }}
-          </div>
-          <div class="flex items-center gap-2">
-            <Badge
-              v-for="label of item.labels"
-              :key="label"
-              :variant="getBadgeVariantFromLabel(label)"
-            >
-              {{ label }}
-            </Badge>
-          </div>
-        </button>
-      </TransitionGroup>
-    </div>
-  </ScrollArea>
+          <Icon :icon="link.icon" class="mr-2 size-4" />
+          {{ link.title }}
+          <span
+            v-if="link.label"
+            :class="
+              cn(
+                'ml-auto',
+                link.variant === 'default' && 'text-background dark:text-white'
+              )
+            "
+          >
+            {{ link.label }}
+          </span>
+        </a>
+      </template>
+    </nav>
+  </div>
 </template>
-
-<style scoped>
-.list-move,
-.list-enter-active,
-.list-leave-active {
-  transition: all 0.5s ease;
-}
-
-.list-enter-from,
-.list-leave-to {
-  opacity: 0;
-  transform: translateY(15px);
-}
-
-.list-leave-active {
-  position: absolute;
-}
-</style>

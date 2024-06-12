@@ -1,31 +1,29 @@
 interface IAuthStore {
-  email: string;
-  name: string;
   access_token: string;
-  status: boolean;
 }
 
 const defaultValue: { user: IAuthStore } = {
   user: {
-    email: "",
-    name: "",
     access_token: "",
-
-    status: false,
   },
 };
 
 export const useAuthStore = defineStore("auth", {
   state: () => defaultValue,
-  getters: {
-    isAuth: (state) => state.user.status,
-  },
   actions: {
+    initialize() {
+      const storedUser = localStorage.getItem("authUser");
+      if (storedUser) {
+        this.user = JSON.parse(storedUser);
+      }
+    },
     clear() {
+      localStorage.removeItem("authUser");
       this.$patch(defaultValue);
     },
     set(input: IAuthStore) {
-      this.$patch({ user: input });
+      localStorage.setItem("authUser", JSON.stringify(input));
+      this.user = input;
     },
   },
 });

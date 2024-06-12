@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import { Search } from "lucide-vue-next";
-
-
+import AccountSwitcher from "@/components/requests/AccountSwitcher.vue";
+import MailList from "@/components/requests/MailList.vue";
+import MailDisplay from "@/components/requests/MailDisplay.vue";
+import Nav, { type LinkProp } from "@/components/requests/Nav.vue";
 import { refDebounced } from "@vueuse/core";
 import type { Mail } from "@/data/mails";
-
 
 import { cn } from "@/lib/utils";
 

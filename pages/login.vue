@@ -43,7 +43,7 @@
               врачей-рентгенологов&rdquo;
             </p>
             <footer class="text-sm">
-              <a target="_blank" href="https://such.ae">such.ae</a>
+              <a target="_blank" href="https://such.ae">by such.ae</a>
             </footer>
           </blockquote>
         </div>

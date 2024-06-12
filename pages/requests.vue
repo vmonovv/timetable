@@ -1,9 +1,10 @@
 <script lang="ts" setup>
+import Mail from "@/components/requests/Mail.vue";
 import { accounts, mails } from "@/data/mails";
 </script>
 
 <template>
-  <TheHeader />
+  <TheHeader/>
   <div class="md:hidden">
     <image
       src="/examples/mail-dark.png"

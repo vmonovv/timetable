@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { cn } from "@/lib/utils";
-import { ref } from "vue"; // Import ref from vue
 
 const isLoadingStore = useIsLoadingStore();
 const authStore = useAuthStore();
 const emailRef = ref("");
 const passwordRef = ref("");
-const error = ref(""); // Define a reactive variable for error message
+const errorMessage = ref(""); // Define a reactive variable for error message
 const router = useRouter();
 
 interface LoginResponse {
@@ -30,20 +29,12 @@ async function onSubmit(event: Event) {
     if (response) {
       authStore.set({
         access_token: response.access_token,
-        email: "",
-        name: "",
-        status: true,
       });
       await router.push("/");
     }
+    errorMessage.value = "";
   } catch (error) {
-    // console.error("Ошибка при входе:", error);
-    // // Update the error message based on the error response from the server
-    // if (error.response && error.response.status === 401) {
-    //   error.value = "Неверный email или пароль"; // Display error message for incorrect email or password
-    // } else {
-    //   error.value = "Ошибка при входе. Пожалуйста, попробуйте еще раз.";
-    // }
+    errorMessage.value = "Неверный логин или пароль";
   } finally {
     emailRef.value = "";
     passwordRef.value = "";
@@ -69,9 +60,6 @@ async function onSubmit(event: Event) {
             :disabled="isLoadingStore.isLoading"
             required
           />
-          <!-- <div v-if="error && errorField === 'email'" class="text-red-500">
-            {{ errorMessage }}
-          </div> -->
 
           <Input
             v-model="passwordRef"
@@ -84,9 +72,9 @@ async function onSubmit(event: Event) {
             :disabled="isLoadingStore.isLoading"
             required
           />
-          <!-- <div v-if="error && errorField === 'password'" class="text-red-500">
+          <div class="text-red-500">
             {{ errorMessage }}
-          </div> -->
+          </div>
         </div>
         <Button :disabled="isLoadingStore.isLoading">
           <Icon
