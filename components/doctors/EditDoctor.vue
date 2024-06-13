@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { defineProps } from "vue";
+const props = defineProps({
+  doctor: Object,
+});
 const authStore = useAuthStore();
 const isLoadingStore = useIsLoadingStore();
 
@@ -122,16 +126,11 @@ onMounted(async () => {
     </Alert>
     <Sheet>
       <SheetTrigger>
-        <Button size="sm" class="h-7 gap-1">
-          <Icon class="h-4 w-4" name="ic:round-add-circle-outline" />
-          <span class="sr-only sm:not-sr-only sm:whitespace-nowrap">
-            Добавить врача
-          </span>
-        </Button>
+        <div class="text-[14px] pl-2">Изменить</div>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Добавление нового врача</SheetTitle>
+          <SheetTitle>Редактирование {{ props.doctor.full_name }} </SheetTitle>
           <SheetDescription>
             Нажмите добавить, когда вы закончите.
           </SheetDescription>
@@ -210,10 +209,9 @@ onMounted(async () => {
                     :value="item.value"
                     :id="item.value"
                     type="checkbox"
-                    class="border-[#2463eb]"
                     v-model="additionalModalitiesRef"
                   />
-                  <FormLabel class="font-light pt-[3px] pr-4 text-[14px]">
+                  <FormLabel class="font-light pr-4 text-[14px]">
                     {{ item.value }}
                   </FormLabel>
                 </div>
