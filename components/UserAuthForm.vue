@@ -17,7 +17,7 @@ async function onSubmit(event: Event) {
   event.preventDefault();
   try {
     const response: LoginResponse = await $fetch(
-      "http://176.109.104.88:80/login",
+      "http://176.109.104.88:80/auth/login",
       {
         method: "POST",
         body: {
@@ -30,7 +30,7 @@ async function onSubmit(event: Event) {
       authStore.set({
         access_token: response.access_token,
       });
-      await router.push("/");
+      await router.push("/profile");
     }
     errorMessage.value = "";
   } catch (error) {

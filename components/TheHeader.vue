@@ -4,10 +4,17 @@ const route = useRoute();
 const isActive = (path: string): boolean => {
   return route.path === path;
 };
+const authStore = useAuthStore();
+const tokenRef = ref("");
+
+onMounted(async () => {
+  await authStore.initialize(); // Предполагая, что это асинхронная операция
+  tokenRef.value = authStore.user.access_token;
+});
 </script>
 
 <template>
-  <section class="container">
+  <section v-if="tokenRef" class="container">
     <div class="relative font-normal">
       <div class="flex items-center justify-between mt-6 mb-6">
         <ul class="text-[#64748B] font-medium flex -mx-2">

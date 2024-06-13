@@ -5,7 +5,8 @@ import RecentSales from "@/components/dashboard/RecentSales.vue";
 import Search from "@/components/dashboard/Search.vue";
 import analyticsType from "@/data/analytics/type.json";
 import analyticsQuantity from "@/data/analytics/quantity.json";
-
+const isLoadingStore = useIsLoadingStore();
+console.log(isLoadingStore.isLoading);
 interface AnalyticsItem {
   type: string;
   quantity: number;
@@ -32,11 +33,6 @@ const colorProgress = (item: AnalyticsItem): string => {
   }
   return color;
 };
-// "isEnough": false,
-//     "isFixable": true,
-// analytics.forEach((item) => {
-//   console.log(`Progress for ${item.type}: ${calculateProgress(item)}%`);
-// });
 
 const data = [
   {
@@ -70,12 +66,20 @@ const data1 = [
     Количество: 40364,
   },
 ];
+
+const authStore = useAuthStore();
+const tokenRef = ref("");
+
+onMounted(async () => {
+  await authStore.initialize(); // Предполагая, что это асинхронная операция
+  tokenRef.value = authStore.user.access_token;
+});
 </script>
 
 <template>
   <TheHeader />
 
-  <div class="container">
+  <div v-if="tokenRef" class="container">
     <div class="hidden flex-col md:flex">
       <div class="flex-1 space-y-4 pb-6 pt-6">
         <div class="flex items-center justify-between space-y-2 pb-6">

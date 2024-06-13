@@ -9,15 +9,14 @@ const router = useRouter();
 onMounted(async () => {
   isLoadingStore.set(true);
   try {
-    await authStore.initialize(); // Дождаться завершения инициализации
+    await authStore.initialize();
     const token = authStore.user.access_token;
-    console.log(token);
     if (!token) {
       router.push("/login");
     }
   } catch (error) {
     console.error("Ошибка инициализации:", error);
-    // Обработка ошибки инициализации, если это необходимо
+    router.push("/login");
   } finally {
     isLoadingStore.set(false);
   }

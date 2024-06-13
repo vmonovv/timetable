@@ -6,16 +6,17 @@ const roleTranslations = {
   hr: "Сотрудник кадровой службы",
   doctor: "Врач",
 };
+const tokenRef = ref("");
 const logout = async () => {
   try {
     await authStore.initialize(); // Предполагая, что это асинхронная операция
-    const token = authStore.user.access_token;
+    tokenRef.value = authStore.user.access_token;
 
     // Отправка запроса на выход из системы
-    const response = await $fetch("http://176.109.104.88:80/logout", {
+    const response = await $fetch("http://176.109.104.88:80/auth/logout", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${tokenRef.value}`,
       },
     });
 
