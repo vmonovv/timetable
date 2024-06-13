@@ -1,23 +1,7 @@
 <script setup lang="ts">
-import { useAuthStore } from "~/stores/auth.store";
-import { useIsLoadingStore } from "~/stores/loading.store";
-import { useDoctorsList } from "~/stores/doctorsList.store";
-
 const authStore = useAuthStore();
-const isLoadingStore = useIsLoadingStore();
 const doctorsListStore = useDoctorsList();
 const tokenRef = ref<string>("");
-
-const fullNameRef = ref<string>("");
-const emailRef = ref<string>("");
-const experienceRef = ref<string>("");
-const mainModalityRef = ref<string>("");
-const additionalModalityRef = ref<string>("");
-const rateRef = ref<number>(0);
-const phoneRef = ref<string>("");
-const genderRef = ref<string>("");
-
-const doctorsList = ref([]);
 
 // {
 // 	"full_name": "Валерия Уткина Дмитриевна",
@@ -36,54 +20,23 @@ onMounted(async () => {
   await doctorsListStore.fetchUserData();
 });
 
-async function onSubmit(event: Event) {
-  event.preventDefault();
-  isLoadingStore.set(true);
-
-  try {
-    const response = await $fetch(
-      "http://176.109.104.88:80/manager/create_doctor",
-      {
-        method: "POST",
-        body: {
-          full_name: fullNameRef.value,
-          email: emailRef.value,
-          experience: experienceRef.value,
-          main_modality: mainModalityRef.value,
-          additional_modalities: [additionalModalityRef.value], // Предполагая, что это массив
-          rate: rateRef.value,
-          phone: phoneRef.value,
-          gender: genderRef.value,
-        },
-        headers: {
-          Authorization: `Bearer ${tokenRef.value}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    console.log(response);
-    if (response.message === "User with this email already exists") {
-      alert("Доктор успешно создан!");
-    } else {
-      console.error("Ошибка при создании доктора:"); // Вывод ошибки из ответа сервера
-      alert(`Ошибка:`);
+const del = async (item) => {
+  const response = await $fetch(
+    `http://176.109.104.88:80/manager/doctor/${item.id}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${tokenRef.value}`,
+        "Content-Type": "application/json",
+      },
     }
-  } catch (error) {
-    console.error("Error occurred:", error);
-  } finally {
-    isLoadingStore.set(false);
-  }
-}
+  );
+  await doctorsListStore.fetchUserData();
+};
 </script>
 <template>
   <TheHeader />
   <div v-if="tokenRef" class="container relative">
-    <!-- <Alert class="fixed right-4 bottom-4 z-[999] max-w-[300px]" variant="done">
-      <Icon name="ic:outline-done" class="w-4 h-4" />
-      <AlertTitle class="">Успешно</AlertTitle>
-      <AlertDescription> Врач {{ fullNameRef }} создан </AlertDescription>
-    </Alert> -->
-
     <div class="flex min-h-screen w-full flex-col">
       <div class="flex flex-col sm:py-4">
         <main class="grid flex-1 items-start gap-4 sm:py-0 md:gap-8">
@@ -96,144 +49,11 @@ async function onSubmit(event: Event) {
                     Экспорт
                   </span>
                 </Button>
-                <Sheet>
-                  <SheetTrigger>
-                    <Button size="sm" class="h-7 gap-1">
-                      <Icon
-                        class="h-4 w-4"
-                        name="ic:round-add-circle-outline"
-                      />
-                      <span class="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                        Добавить врача
-                      </span>
-                    </Button></SheetTrigger
-                  >
-
-                  <SheetContent>
-                    <SheetHeader>
-                      <SheetTitle>Добавление нового врача</SheetTitle>
-                      <SheetDescription>
-                        Нажмите добавить, когда вы закончите.
-                      </SheetDescription>
-                    </SheetHeader>
-                    <form @submit="onSubmit">
-                      <div class="grid gap-4 py-4">
-                        <div class="grid grid-cols-3 items-center gap-4">
-                          <Label for="name" class="text-right"> ФИО </Label>
-                          <Input
-                            required
-                            v-model="fullNameRef"
-                            id="name"
-                            class="col-span-2"
-                          />
-                        </div>
-                        <div class="grid grid-cols-3 items-center gap-4">
-                          <Label for="email" class="text-right"> Email </Label>
-                          <Input
-                            required
-                            v-model="emailRef"
-                            id="email"
-                            class="col-span-2"
-                          />
-                        </div>
-                        <div class="grid grid-cols-3 items-center gap-4">
-                          <Label for="experience" class="text-right">
-                            Опыт работы
-                          </Label>
-                          <Input
-                            required
-                            v-model="experienceRef"
-                            id="experience"
-                            class="col-span-2"
-                          />
-                        </div>
-                        <div class="grid grid-cols-3 items-center gap-4">
-                          <Label for="mainModalityRef" class="text-right">
-                            Основная модальность
-                          </Label>
-                          <Input
-                            required
-                            v-model="mainModalityRef"
-                            id="mainModalityRef"
-                            class="col-span-2"
-                          />
-                        </div>
-                        <div class="grid grid-cols-3 items-center gap-4">
-                          <Label for="additionalModalityRef" class="text-right">
-                            Дополнительные модальности
-                          </Label>
-                          <Input
-                            required
-                            v-model="additionalModalityRef"
-                            id="additionalModalityRef"
-                            class="col-span-2"
-                          />
-                        </div>
-                        <div class="grid grid-cols-3 items-center gap-4">
-                          <Label for="rateRef " class="text-right">
-                            Ставка
-                          </Label>
-                          <Input
-                            required
-                            v-model="rateRef"
-                            id="rateRef"
-                            class="col-span-2"
-                          />
-                        </div>
-                        <div class="grid grid-cols-3 items-center gap-4">
-                          <Label for="phoneRef " class="text-right">
-                            Телефон
-                          </Label>
-                          <Input
-                            required
-                            v-model="phoneRef"
-                            id="phoneRef"
-                            class="col-span-2"
-                          />
-                        </div>
-                        <div class="grid grid-cols-3 items-center gap-4">
-                          <Label for="genderRef " class="text-right">
-                            Пол
-                          </Label>
-                          <Input
-                            required
-                            v-model="genderRef"
-                            id="genderRef"
-                            class="col-span-2"
-                          />
-                        </div>
-                      </div>
-                      <div class="flex justify-end">
-                        <Button
-                          size="sm"
-                          class="h-7 gap-1"
-                          :disabled="isLoadingStore.isLoading"
-                        >
-                          <Icon
-                            v-if="isLoadingStore.isLoading"
-                            class="mr-2 h-4 w-4 animate-spin"
-                            name="svg-spinners:90-ring-with-bg"
-                            color="black"
-                          />
-                          Добавить
-                        </Button>
-                      </div>
-                      <!-- <SheetClose as-child>
-                        </SheetClose> -->
-                    </form>
-                    <SheetFooter> </SheetFooter>
-                  </SheetContent>
-                </Sheet>
+                <DoctorsAddDoctor />
               </div>
             </div>
             <TabsContent value="all">
               <Card>
-                <!-- <CardHeader>
-                    <CardTitle>Products</CardTitle>
-                    <CardDescription>
-                      Manage your products and view their sales performance.
-                    </CardDescription>
-                  </CardHeader> -->
                 <CardContent>
                   <Table>
                     <TableHeader>
@@ -354,7 +174,33 @@ async function onSubmit(event: Event) {
                             <DropdownMenuContent align="end">
                               <DropdownMenuLabel>Действия</DropdownMenuLabel>
                               <DropdownMenuItem>Изменить</DropdownMenuItem>
-                              <DropdownMenuItem>Удалить</DropdownMenuItem>
+                              <div>
+                                <AlertDialog>
+                                  <AlertDialogTrigger class="text-[14px] pl-2"
+                                    >Удалить</AlertDialogTrigger
+                                  >
+                                  <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle
+                                        >Вы уверены, что хотите удалить
+                                        пользователя?</AlertDialogTitle
+                                      >
+                                      <AlertDialogDescription>
+                                        После удаления, он будет очищен из базы
+                                        данных без возможности восстановления
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel
+                                        >Отмена</AlertDialogCancel
+                                      >
+                                      <AlertDialogAction @click="del(item)"
+                                        >Удалить</AlertDialogAction
+                                      >
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                              </div>
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </TableCell>
