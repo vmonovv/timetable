@@ -25,29 +25,9 @@ const task = computed(() => taskSchema.parse(props.row.original));
       </Button>
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end" class="w-[160px]">
-      <DropdownMenuItem>Редактировать</DropdownMenuItem>
-      <DropdownMenuItem>Сделать копию</DropdownMenuItem>
-      <DropdownMenuItem>В избранное</DropdownMenuItem>
-      <!-- <DropdownMenuSeparator />
-      <DropdownMenuSub>
-        <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
-        <DropdownMenuSubContent>
-          <DropdownMenuRadioGroup :value="task.label">
-            <DropdownMenuRadioItem
-              v-for="label in labels"
-              :key="label.value"
-              :value="label.value"
-            >
-              {{ label.label }}
-            </DropdownMenuRadioItem>
-          </DropdownMenuRadioGroup>
-        </DropdownMenuSubContent>
-      </DropdownMenuSub>
-      <DropdownMenuSeparator /> -->
-      <!-- <DropdownMenuItem>
-        Удалить
-        <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-      </DropdownMenuItem> -->
+      <DropdownMenuItem :schedule="item"
+        ><ScheduleEditSchedule
+      /></DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
 </template>

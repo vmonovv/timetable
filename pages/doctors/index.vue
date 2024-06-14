@@ -148,9 +148,7 @@ onMounted(async () => {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                               <DropdownMenuLabel>Действия</DropdownMenuLabel>
-                              <div
-                                ><DoctorsEditDoctor :doctor="item"
-                              /></div>
+                              <div><DoctorsEditDoctor :doctor="item" /></div>
                               <div>
                                 <DoctorsDeleteDoctor :doctor="item" />
                               </div>

@@ -1,12 +1,10 @@
-<script setup lang="ts">
-
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div>
     <Input
       type="search"
-      placeholder="Search..."
+      placeholder="Поиск..."
       class="md:w-[100px] lg:w-[300px]"
     />
   </div>

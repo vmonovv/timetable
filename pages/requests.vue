@@ -12,7 +12,7 @@ onMounted(async () => {
 
 <template>
   <TheHeader />
-  <div v-if="tokenRef" class="md:hidden">
+  <div v-if="tokenRef" class="md:hidden ">
     <image
       src="/examples/mail-dark.png"
       :width="1280"

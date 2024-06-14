@@ -147,7 +147,7 @@ function onExpand() {
       direction="horizontal"
       class="h-full max-h-[800px] items-stretch"
     >
-      <ResizablePanel
+      <!-- <ResizablePanel
         id="resize-panel-1"
         :default-size="defaultLayout[0]"
         :collapsed-size="navCollapsedSize"
@@ -171,14 +171,14 @@ function onExpand() {
             )
           "
         >
-          <AccountSwitcher :is-collapsed="isCollapsed" :accounts="accounts" />
+       
         </div>
         <Separator />
         <Nav :is-collapsed="isCollapsed" :links="links" />
         <Separator />
         <Nav :is-collapsed="isCollapsed" :links="links2" />
-      </ResizablePanel>
-      <ResizableHandle id="resize-handle-1" with-handle />
+      </ResizablePanel> -->
+      <!-- <ResizableHandle id="resize-handle-1" with-handle /> -->
       <ResizablePanel
         id="resize-panel-2"
         :default-size="defaultLayout[1]"
@@ -186,16 +186,16 @@ function onExpand() {
       >
         <Tabs default-value="all">
           <div class="flex items-center px-4 py-2">
-            <h1 class="text-xl font-bold">Inbox</h1>
+            <h1 class="text-xl font-bold">Сообщения</h1>
             <TabsList class="ml-auto">
               <TabsTrigger value="all" class="text-zinc-600 dark:text-zinc-200">
-                All mail
+                Все заявки
               </TabsTrigger>
               <TabsTrigger
                 value="unread"
                 class="text-zinc-600 dark:text-zinc-200"
               >
-                Unread
+                В архиве
               </TabsTrigger>
             </TabsList>
           </div>
@@ -210,7 +210,7 @@ function onExpand() {
                 />
                 <Input
                   v-model="searchValue"
-                  placeholder="Search"
+                  placeholder="Поиск"
                   class="pl-8"
                 />
               </div>

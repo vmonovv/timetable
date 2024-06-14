@@ -58,6 +58,7 @@ function formatRange(weekDates) {
 
     <div class="flex flex-col gap-y-4 mt-4 sm:flex-row sm:gap-x-4 sm:gap-y-0">
       <CalendarGrid v-for="month in grid" :key="month.value.toString()">
+     
         <!-- <CalendarGridHead>
           <CalendarGridRow>
             <CalendarHeadCell
@@ -74,7 +75,9 @@ function formatRange(weekDates) {
             :key="`weekDate-${index}`"
             class="mt-2 w-auto mx-1"
           >
+          
             <CalendarCellTrigger class="px-7 pt-[3px]" :day="weekDates[0]" :month="month.value">
+              
               {{ formatRange(weekDates) }}
             </CalendarCellTrigger>
           </CalendarGridRow>
