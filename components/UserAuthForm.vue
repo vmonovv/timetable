@@ -55,7 +55,7 @@ async function onSubmit(event: Event) {
             placeholder="Email"
             type="email"
             auto-capitalize="none"
-            auto-complete="email"
+            autocomplete="username"
             auto-correct="off"
             :disabled="isLoadingStore.isLoading"
             required
@@ -67,7 +67,7 @@ async function onSubmit(event: Event) {
             placeholder="Пароль"
             type="password"
             auto-capitalize="none"
-            auto-complete="current-password"
+            autocomplete="current-password"
             auto-correct="off"
             :disabled="isLoadingStore.isLoading"
             required
@@ -85,7 +85,7 @@ async function onSubmit(event: Event) {
           />
           Войти
         </Button>
-      
+
         <!-- Display error message -->
       </div>
     </form>

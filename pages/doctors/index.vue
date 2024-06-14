@@ -24,7 +24,7 @@ onMounted(async () => {
                     Экспорт
                   </span>
                 </Button>
-                <DoctorsAddDoctor />
+                <DoctorsCreateDoctor />
               </div>
             </div>
             <TabsContent value="all">

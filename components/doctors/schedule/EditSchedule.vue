@@ -2,7 +2,7 @@
 import { defineProps, ref, watch, onMounted } from "vue";
 
 const props = defineProps({
-  doctor: Object,
+  schedule: Object,
 });
 const authStore = useAuthStore();
 const isLoadingStore = useIsLoadingStore();
@@ -23,23 +23,23 @@ const extractNumber = (str: string): number => {
 };
 
 const initializeRefs = () => {
-  fullNameRef.value = props.doctor.full_name;
-  emailRef.value = props.doctor.email;
-  experienceRef.value = extractNumber(props.doctor.experience);
-  mainModalityRef.value = props.doctor.main_modality;
-  additionalModalitiesRef.value = props.doctor.additional_modalities;
-  rateRef.value = props.doctor.rate;
-  phoneRef.value = props.doctor.phone;
-  genderRef.value = props.doctor.gender;
-  tokenRef.value = props.doctor.token;
+  fullNameRef.value = props.schedule.full_name;
+  emailRef.value = props.schedule.email;
+  experienceRef.value = extractNumber(props.schedule.experience);
+  mainModalityRef.value = props.schedule.main_modality;
+  additionalModalitiesRef.value = props.schedule.additional_modalities;
+  rateRef.value = props.schedule.rate;
+  phoneRef.value = props.schedule.phone;
+  genderRef.value = props.schedule.gender;
+  tokenRef.value = props.schedule.token;
 };
 
 // Initialize the refs when the component is mounted or props change
-watch(() => props.doctor, initializeRefs, { immediate: true });
+watch(() => props.schedule, initializeRefs, { immediate: true });
 
 const alertRef = ref(false);
 const alertRefY = ref(false);
-const doctorsList = ref([]);
+const schedulesList = ref([]);
 const modalityMain = [
   { value: "Денс" },
   { value: "МРТ" },
@@ -64,7 +64,7 @@ async function onSubmit(event: Event) {
 
   try {
     const response = await $fetch(
-      "http://176.109.104.88:80/manager/create_doctor",
+      "http://176.109.104.88:80/manager/create_schedule",
       {
         method: "POST",
         body: {
@@ -84,7 +84,7 @@ async function onSubmit(event: Event) {
       }
     );
 
-    if (response.message === "Doctor created successfully") {
+    if (response.message === "schedule created successfully") {
       alertRef.value = true;
       clearFields();
       setTimeout(() => (alertRef.value = false), 5000);
@@ -236,6 +236,8 @@ onMounted(async () => {
             <div class="items-center gap-4">
               <Label for="rateRef" class="text-right">Ставка</Label>
               <Input
+                min="0"
+                step="0.1"
                 type="number"
                 required
                 v-model="rateRef"

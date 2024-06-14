@@ -10,7 +10,7 @@ interface Ticket {
 }
 
 export const useTicketsList = defineStore({
-  id: "doctorsList",
+  id: "tiketssList",
   state: () => ({
     tickets_list: [] as Ticket[],
   }),

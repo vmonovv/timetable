@@ -2,7 +2,6 @@
 import type { Table } from "@tanstack/vue-table";
 import type { Task } from "../data/schema";
 
-
 interface DataTablePaginationProps {
   table: Table<Task>;
 }
@@ -11,12 +10,14 @@ defineProps<DataTablePaginationProps>();
 
 <template>
   <div class="flex items-center justify-between px-2">
-    <div class="flex-1 text-sm text-muted-foreground opacity-0 pointer-events-none">
+    <div
+      class="flex-1 text-sm text-muted-foreground opacity-0 pointer-events-none"
+    >
       {{ table.getFilteredSelectedRowModel().rows.length }} of
       {{ table.getFilteredRowModel().rows.length }} row(s) selected.
     </div>
     <div class="flex items-center space-x-6 lg:space-x-8">
-      <!-- <div class="flex items-center space-x-2">
+      <div class="flex items-center space-x-2">
         <p class="text-sm font-medium">Rows per page</p>
         <Select
           :model-value="`${table.getState().pagination.pageSize}`"
@@ -37,13 +38,13 @@ defineProps<DataTablePaginationProps>();
             </SelectItem>
           </SelectContent>
         </Select>
-      </div> -->
+      </div>
       <div
         class="flex w-[200px] items-center justify-center text-sm font-medium"
       >
-      Понедельник
-          <!--    {{ table.getState().pagination.pageIndex + 1 }} of
-        {{ table.getPageCount() }} -->
+        Понедельник
+        {{ table.getState().pagination.pageIndex + 1 }} of
+        {{ table.getPageCount() }}
       </div>
       <div class="flex items-center space-x-2">
         <Button

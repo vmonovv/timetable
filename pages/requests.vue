@@ -6,7 +6,7 @@ const authStore = useAuthStore();
 const tokenRef = ref("");
 
 onMounted(async () => {
-  await authStore.initialize(); // Предполагая, что это асинхронная операция
+  authStore.initialize();
   tokenRef.value = authStore.user.access_token;
   await ticketsListStore.fetchTicketListData();
   console.log(toRaw(ticketsListStore.tickets_list));

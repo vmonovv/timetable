@@ -1,9 +1,4 @@
 <script setup lang="ts">
-import { defineProps, ref, watch, onMounted } from "vue";
-
-const props = defineProps({
-  doctor: Object,
-});
 const authStore = useAuthStore();
 const isLoadingStore = useIsLoadingStore();
 
@@ -16,28 +11,6 @@ const rateRef = ref<number>(0);
 const phoneRef = ref<string>("");
 const genderRef = ref<string>("");
 const tokenRef = ref<string>("");
-const idRef = ref<string>("");
-const statusRef = ref("Активный");
-
-const extractNumber = (str: string): number => {
-  const match = str.match(/\d+/);
-  return match ? parseInt(match[0], 10) : 0;
-};
-
-const initializeRefs = () => {
-  fullNameRef.value = props.doctor.full_name;
-  // emailRef.value = props.doctor.email;
-  experienceRef.value = extractNumber(props.doctor.experience);
-  mainModalityRef.value = props.doctor.main_modality;
-  additionalModalitiesRef.value = props.doctor.additional_modalities;
-  rateRef.value = props.doctor.rate;
-  phoneRef.value = props.doctor.phone;
-  genderRef.value = props.doctor.gender;
-  tokenRef.value = props.doctor.token;
-};
-idRef.value = props.doctor.id;
-// Initialize the refs when the component is mounted or props change
-watch(() => props.doctor, initializeRefs, { immediate: true });
 
 const alertRef = ref(false);
 const alertRefY = ref(false);
@@ -66,17 +39,16 @@ async function onSubmit(event: Event) {
 
   try {
     const response = await $fetch(
-      `http://176.109.104.88:80/manager/doctor/${idRef.value}`,
+      "http://176.109.104.88:80/manager/create_doctor",
       {
-        method: "PUT",
+        method: "POST",
         body: {
           full_name: fullNameRef.value,
-          // email: emailRef.value,
+          email: emailRef.value,
           experience: `${experienceRef.value} лет`,
           main_modality: mainModalityRef.value,
-          additional_modalities: additionalModalitiesRef.value,
+          additional_modality: additionalModalitiesRef.value,
           rate: rateRef.value,
-          status: statusRef.value,
           phone: phoneRef.value,
           gender: genderRef.value,
         },
@@ -86,18 +58,26 @@ async function onSubmit(event: Event) {
         },
       }
     );
-
-    if (response.message === "Doctor created successfully") {
+    if (
+      response.message ===
+      "Doctor created successfully and approval ticket generated"
+    ) {
       alertRef.value = true;
       clearFields();
-      setTimeout(() => (alertRef.value = false), 5000);
+      setTimeout(() => {
+        alertRef.value = false;
+      }, 5000);
     } else {
       alertRefY.value = true;
-      setTimeout(() => (alertRefY.value = false), 5000);
+      setTimeout(() => {
+        alertRefY.value = false;
+      }, 5000);
     }
   } catch (error) {
     alertRefY.value = true;
-    setTimeout(() => (alertRefY.value = false), 5000);
+    setTimeout(() => {
+      alertRefY.value = false;
+    }, 5000);
     console.error("Ошибка при отправке данных:", error);
   } finally {
     isLoadingStore.set(false);
@@ -130,7 +110,7 @@ onMounted(async () => {
     >
       <Icon name="ic:outline-done" class="w-4 h-4" />
       <AlertTitle class="">Успешно</AlertTitle>
-      <AlertDescription> Врач {{ fullNameRef }} изменён </AlertDescription>
+      <AlertDescription> Врач {{ fullNameRef.value }} создан </AlertDescription>
     </Alert>
     <Alert
       v-if="alertRefY"
@@ -139,17 +119,24 @@ onMounted(async () => {
     >
       <Icon name="ic:round-report-gmailerrorred" class="w-4 h-4" />
       <AlertTitle class="">Ошибка</AlertTitle>
-      <AlertDescription>Ошибка при измении пользователя</AlertDescription>
+      <AlertDescription>
+        Врач {{ fullNameRef.value }} был создан ранее
+      </AlertDescription>
     </Alert>
     <Sheet>
       <SheetTrigger>
-        <div class="text-[14px] pl-2">Изменить</div>
+        <Button size="sm" class="h-7 gap-1">
+          <Icon class="h-4 w-4" name="ic:round-add-circle-outline" />
+          <span class="sr-only sm:not-sr-only sm:whitespace-nowrap">
+            Добавить врача
+          </span>
+        </Button>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Редактирование пользователя </SheetTitle>
+          <SheetTitle>Добавление нового врача</SheetTitle>
           <SheetDescription>
-            Нажмите изменить, когда вы закончите.
+            Нажмите добавить, когда вы закончите.
           </SheetDescription>
         </SheetHeader>
         <form @submit="onSubmit">
@@ -164,7 +151,7 @@ onMounted(async () => {
                 class="col-span-2"
               />
             </div>
-            <!-- <div class="items-center gap-4">
+            <div class="items-center gap-4">
               <Label for="email" class="text-right">Email</Label>
               <Input
                 type="email"
@@ -173,8 +160,7 @@ onMounted(async () => {
                 id="email"
                 class="col-span-2"
               />
-            </div> -->
-
+            </div>
             <div class="items-center gap-4">
               <Label for="experience" class="text-right"
                 >Опыт работы (лет)</Label
@@ -227,9 +213,10 @@ onMounted(async () => {
                     :value="item.value"
                     :id="item.value"
                     type="checkbox"
+                    class="border-[#2463eb]"
                     v-model="additionalModalitiesRef"
                   />
-                  <FormLabel class="font-light pr-4 text-[14px]">
+                  <FormLabel class="font-light pt-[3px] pr-4 text-[14px]">
                     {{ item.value }}
                   </FormLabel>
                 </div>
@@ -282,7 +269,7 @@ onMounted(async () => {
                 name="svg-spinners:90-ring-with-bg"
                 color="black"
               />
-              Изменить
+              Добавить
             </Button>
           </div>
         </form>

@@ -58,7 +58,10 @@ async function onSubmit(event: Event) {
         },
       }
     );
-    if (response.message === "Doctor created successfully") {
+    if (
+      response.message ===
+      "Doctor created successfully and approval ticket generated"
+    ) {
       alertRef.value = true;
       clearFields();
       setTimeout(() => {
@@ -222,6 +225,8 @@ onMounted(async () => {
             <div class="items-center gap-4">
               <Label for="rateRef" class="text-right">Ставка</Label>
               <Input
+                min="0"
+                step="0.1"
                 type="number"
                 required
                 v-model="rateRef"
