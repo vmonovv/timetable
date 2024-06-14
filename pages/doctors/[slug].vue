@@ -19,6 +19,7 @@ const tokenRef = ref<string>("");
 const route = useRoute();
 const router = useRouter();
 const scheduleRef = ref<any[]>([]);
+const scheduleAllRef = ref<any[]>([]);
 const doctorRef = ref<Doctor | null>(null);
 const slug = route.params.slug as string;
 
@@ -27,10 +28,10 @@ const currentYear = ref<number>(new Date().getFullYear());
 
 const fetchSchedule = async (year: number, month: number) => {
   if (!doctorRef.value) return;
-  // ${month}
+
   try {
     const response = await $fetch(
-      `http://176.109.104.88:80/doctor/${doctorRef.value.id}/schedule?year=${year}&month=7`,
+      `http://176.109.104.88:80/doctor/${doctorRef.value.id}/schedule?year=${year}&month=${month}`,
       {
         method: "GET",
         headers: {
@@ -38,15 +39,17 @@ const fetchSchedule = async (year: number, month: number) => {
         },
       }
     );
+    if (response) {
+      scheduleAllRef.value = response;
+    }
     if (response && response.schedule) {
       scheduleRef.value = response.schedule;
-      console.log(scheduleRef.value);
     } else {
       console.error("Неправильный формат ответа от сервера");
       scheduleRef.value = [];
     }
   } catch (error) {
-    console.error("Ошибка при отправке данных:", error);
+    console.error("пусто:", error);
     scheduleRef.value = [];
   }
 };
@@ -165,24 +168,47 @@ onMounted(async () => {
               </div>
             </div>
             <div>
-              <DoctorsCreateSchedule />
+              <DoctorsScheduleCreateSchedule :schedule="scheduleRef" />
             </div>
           </div>
           <DataTable :data="scheduleRef" :columns="columns" />
         </div>
-        <div class="fixed bottom-10 right-6 flex items-center">
-          <div class="mr-5 font-medium">{{ monthName }} {{ currentYear }}</div>
-          <Pagination
-            v-slot="{ page }"
-            :default-page="currentMonth"
-            @update:page="(page) => updateMonthAndYear(page)"
-          >
-            <PaginationList v-slot="{ items }" class="flex items-center gap-1">
-              <PaginationPrev />
+        <div
+          class="fixed container w-full flex items-center justify-between bottom-10 right-6"
+        >
+          <div class="text-[15px] text-[#636363] font-normal">
+            Отработка за пол месяца:
+            <span class="font-medium  text-black"
+              >{{ scheduleAllRef.half_month_hours }}ч</span
+            >
+          </div>
 
-              <PaginationNext />
-            </PaginationList>
-          </Pagination>
+          <div class="text-[#636363] text-[15px] font-normal">
+            Отработка за месяц:
+            <span class="font-medium text-black"
+              >{{ scheduleAllRef.total_month_hours }}ч</span
+            >
+          </div>
+
+          <div class="flex items-center">
+            <div class="mr-5 font-medium">
+              {{ monthName }} {{ currentYear }}
+            </div>
+            <Pagination
+              v-slot="{ page }"
+              :default-page="currentMonth"
+              @update:page="(page) => updateMonthAndYear(page)"
+            >
+              <PaginationList
+                v-slot="{ items }"
+                class="flex items-center gap-1"
+              >
+                <PaginationPrev />
+
+                <PaginationNext />
+              </PaginationList>
+            </Pagination>
+          </div>
         </div>
       </div>
     </div>

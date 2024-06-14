@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { defineProps, ref, watch, onMounted } from "vue";
+import { defineProps, ref, watch, onMounted, defineEmits } from "vue";
 
 const props = defineProps({
   doctor: Object,
 });
+const emit = defineEmits(["updateAlert", "updateAlertError"]);
+
 const authStore = useAuthStore();
 const isLoadingStore = useIsLoadingStore();
 
@@ -18,7 +20,10 @@ const genderRef = ref<string>("");
 const tokenRef = ref<string>("");
 const idRef = ref<string>("");
 const statusRef = ref("Активный");
-
+onMounted(async () => {
+  authStore.initialize(); // Предполагая, что это асинхронная операция
+  tokenRef.value = authStore.user.access_token;
+});
 const extractNumber = (str: string): number => {
   const match = str.match(/\d+/);
   return match ? parseInt(match[0], 10) : 0;
@@ -69,17 +74,16 @@ async function onSubmit(event: Event) {
       `http://176.109.104.88:80/manager/doctor/${idRef.value}`,
       {
         method: "PUT",
-        body: {
+        body: JSON.stringify({
           full_name: fullNameRef.value,
-          // email: emailRef.value,
           experience: `${experienceRef.value} лет`,
           main_modality: mainModalityRef.value,
           additional_modalities: additionalModalitiesRef.value,
-          rate: rateRef.value,
+          rate: parseFloat(rateRef.value), // Убедитесь, что это число
           status: statusRef.value,
           phone: phoneRef.value,
           gender: genderRef.value,
-        },
+        }),
         headers: {
           Authorization: `Bearer ${tokenRef.value}`,
           "Content-Type": "application/json",
@@ -87,17 +91,17 @@ async function onSubmit(event: Event) {
       }
     );
 
-    if (response.message === "Doctor created successfully") {
-      alertRef.value = true;
+    if (response.message === "Doctor updated successfully") {
+      emit("updateAlert", true);
       clearFields();
-      setTimeout(() => (alertRef.value = false), 5000);
+      setTimeout(() => emit("updateAlert", false), 5000);
     } else {
-      alertRefY.value = true;
-      setTimeout(() => (alertRefY.value = false), 5000);
+      emit("updateAlertError", true);
+      setTimeout(() => emit("updateAlertError", false), 5000);
     }
   } catch (error) {
-    alertRefY.value = true;
-    setTimeout(() => (alertRefY.value = false), 5000);
+    emit("updateAlertError", true);
+    setTimeout(() => emit("updateAlertError", false), 5000);
     console.error("Ошибка при отправке данных:", error);
   } finally {
     isLoadingStore.set(false);
@@ -114,33 +118,10 @@ function clearFields() {
   phoneRef.value = "";
   genderRef.value = "";
 }
-
-onMounted(async () => {
-  await authStore.initialize(); // Предполагая, что это асинхронная операция
-  tokenRef.value = authStore.user.access_token;
-});
 </script>
 
 <template>
   <div>
-    <Alert
-      v-if="alertRef"
-      class="fixed right-4 bottom-4 z-[999] max-w-[300px]"
-      variant="done"
-    >
-      <Icon name="ic:outline-done" class="w-4 h-4" />
-      <AlertTitle class="">Успешно</AlertTitle>
-      <AlertDescription> Врач {{ fullNameRef }} изменён </AlertDescription>
-    </Alert>
-    <Alert
-      v-if="alertRefY"
-      class="fixed right-4 bottom-4 z-[999] max-w-[300px]"
-      variant="destructive"
-    >
-      <Icon name="ic:round-report-gmailerrorred" class="w-4 h-4" />
-      <AlertTitle class="">Ошибка</AlertTitle>
-      <AlertDescription>Ошибка при измении пользователя</AlertDescription>
-    </Alert>
     <Sheet>
       <SheetTrigger>
         <div class="text-[14px] pl-2">Изменить</div>

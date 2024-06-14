@@ -8,6 +8,14 @@ onMounted(async () => {
   tokenRef.value = authStore.user.access_token;
   await doctorsListStore.fetchUserData();
 });
+
+function handleUpdateAlert(status: boolean) {
+  updateAlert.value = status;
+}
+
+function handleUpdateAlertError(status: boolean) {
+  updateAlertError.value = status;
+}
 </script>
 <template>
   <TheHeader />
@@ -148,7 +156,13 @@ onMounted(async () => {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                               <DropdownMenuLabel>Действия</DropdownMenuLabel>
-                              <div><DoctorsEditDoctor :doctor="item" /></div>
+                              <div>
+                                <DoctorsEditDoctor
+                                  @updateAlert="handleUpdateAlert"
+                                  @updateAlertError="handleUpdateAlertError"
+                                  :doctor="item"
+                                />
+                              </div>
                               <div>
                                 <DoctorsDeleteDoctor :doctor="item" />
                               </div>
@@ -171,6 +185,24 @@ onMounted(async () => {
         </main>
       </div>
     </div>
+    <Alert
+      v-if="updateAlert"
+      class="fixed right-4 bottom-4 z-[999] max-w-[300px]"
+      variant="done"
+    >
+      <Icon name="ic:outline-done" class="w-4 h-4" />
+      <AlertTitle class="">Успешно</AlertTitle>
+      <AlertDescription> Врач {{ fullNameRef }} изменён </AlertDescription>
+    </Alert>
+    <Alert
+      v-if="updateAlertError"
+      class="fixed right-4 bottom-4 z-[999] max-w-[300px]"
+      variant="destructive"
+    >
+      <Icon name="ic:round-report-gmailerrorred" class="w-4 h-4" />
+      <AlertTitle class="">Ошибка</AlertTitle>
+      <AlertDescription>Ошибка при измении пользователя</AlertDescription>
+    </Alert>
   </div>
 
   <LayoutsLoader v-else />
