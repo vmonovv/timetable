@@ -85,7 +85,7 @@ async function onSubmit(event: Event) {
           />
           Войти
         </Button>
-        <div v-if="error" class="text-red-500">{{ error }}</div>
+      
         <!-- Display error message -->
       </div>
     </form>

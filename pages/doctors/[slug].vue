@@ -21,7 +21,7 @@ const authStore = useAuthStore();
 const doctorsListStore = useDoctorsList();
 const tokenRef = ref("");
 const route = useRoute();
-const schedule = ref();
+const scheduleRef = ref("");
 const doctorRef = ref("");
 const slug = route.params.slug as string;
 
@@ -46,6 +46,8 @@ onMounted(async () => {
         },
       }
     );
+    scheduleRef.value = response;
+    console.log(scheduleRef.value)
   } catch (error) {
     console.error("Ошибка при отправке данных:", error);
   } finally {
@@ -132,7 +134,7 @@ onMounted(async () => {
               </div>
             </div>
           </div>
-          <DataTable :data="julyData" :columns="columns" />
+          <DataTable :data="scheduleRef" :columns="columns" />
         </div>
       </div>
     </div>
