@@ -1,18 +1,21 @@
 <script lang="ts" setup>
 import Mail from "@/components/requests/Mail.vue";
 import { accounts, mails } from "@/data/mails";
+const ticketsListStore = useTicketsList();
 const authStore = useAuthStore();
 const tokenRef = ref("");
 
 onMounted(async () => {
   await authStore.initialize(); // Предполагая, что это асинхронная операция
   tokenRef.value = authStore.user.access_token;
+  await ticketsListStore.fetchTicketListData();
+  console.log(toRaw(ticketsListStore.tickets_list));
 });
 </script>
 
 <template>
   <TheHeader />
-  <div v-if="tokenRef" class="md:hidden ">
+  <div v-if="tokenRef" class="md:hidden">
     <image
       src="/examples/mail-dark.png"
       :width="1280"
