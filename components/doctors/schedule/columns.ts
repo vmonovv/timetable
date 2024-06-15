@@ -93,7 +93,7 @@ export const columns: ColumnDef<Task>[] = [
     accessorKey: "day_type",
     header: ({ column }) => h(DataTableColumnHeader, { column, title: "Тип " }),
     cell: ({ row }) => {
-      const value = row.getValue("day_type") || "Выходной";
+      const value = row.getValue("day_type");
       return h("div", { class: "flex items-center" }, [
         h(Badge, { variant: "outline" }, () => value),
       ]);

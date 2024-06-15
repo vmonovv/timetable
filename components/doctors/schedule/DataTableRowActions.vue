@@ -8,8 +8,6 @@ interface DataTableRowActionsProps {
   row: Row<Task>;
 }
 
-
-
 const tokenRef = ref<string>("");
 const route = useRoute();
 const router = useRouter();

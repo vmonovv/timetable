@@ -36,7 +36,6 @@ const modalityMain = [
   { type: "EMERGENCY", value: "Непредвиденная ситуация" },
   { type: "WORKING_DAY", value: "Рабочий день" },
   { type: "VACATION", value: "Отпуск" },
-  { type: "WEEKEND", value: "Выходной" },
 ];
 
 async function onSubmit(event: Event) {

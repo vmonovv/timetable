@@ -39,6 +39,42 @@ const fetchSchedule = async (year: number, month: number) => {
         },
       }
     );
+    const schedule = response.schedule;
+    // Функция для получения количества дней в месяце
+    function daysInMonth(year, month) {
+      return new Date(year, month, 0).getDate();
+    }
+
+    // Получаем количество дней в текущем месяце
+    const totalDays = daysInMonth(year, month);
+    const monthStr = month < 10 ? `0${month}` : month;
+
+    // Создаем объект для быстрого поиска дат в расписании
+    const scheduleMap = schedule.reduce((map, entry) => {
+      map[entry.date] = entry;
+      return map;
+    }, {});
+
+    // Заполняем отсутствующие даты
+    for (let day = 1; day <= totalDays; day++) {
+      const dayStr = day < 10 ? `0${day}` : day;
+      const dateStr = `${year}-${monthStr}-${dayStr}`;
+
+      if (!scheduleMap[dateStr]) {
+        schedule.push({
+          date: dateStr,
+          start_time:"",
+          day_type: "Выходной",
+          break_minutes: 0,
+          end_time: "",
+          hours_worked: 0,
+        });
+      }
+    }
+    // Сортировка расписания по дате
+    schedule.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    console.log(schedule);
     if (response) {
       scheduleAllRef.value = response;
     }
