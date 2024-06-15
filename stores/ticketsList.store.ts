@@ -5,12 +5,13 @@ interface Ticket {
   id: string;
   type: string;
   data: string;
-  status: number;
-  createdAt: Date;
+  status: string;
+  created_at: string;
+  full_name: string;
 }
 
 export const useTicketsList = defineStore({
-  id: "tiketssList",
+  id: "ticketsList",
   state: () => ({
     tickets_list: [] as Ticket[],
   }),
