@@ -66,7 +66,7 @@ async function onSubmit(event: Event) {
     const response = await $fetch(
       "http://176.109.104.88:80/manager/create_schedule",
       {
-        method: "POST",
+        method: "PUT",
         body: {
           full_name: fullNameRef.value,
           email: emailRef.value,
@@ -237,7 +237,7 @@ onMounted(async () => {
               <Label for="rateRef" class="text-right">Ставка</Label>
               <Input
                 min="0"
-                step="0.1"
+                step="0.05"
                 type="number"
                 required
                 v-model="rateRef"

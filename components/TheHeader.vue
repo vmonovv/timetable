@@ -11,6 +11,23 @@ onMounted(async () => {
   await authStore.initialize(); // Предполагая, что это асинхронная операция
   tokenRef.value = authStore.user.access_token;
 });
+const router = useRouter();
+const checkToken = async () => {
+  try {
+    const response = await $fetch(
+      "http://176.109.104.88:80/auth/token_status",
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${tokenRef.value}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  } catch (error) {
+    await router.push("/login");
+  }
+};
 </script>
 
 <template>
@@ -19,17 +36,26 @@ onMounted(async () => {
       <div class="flex items-center justify-between mt-6 mb-6">
         <ul class="text-[#64748B] font-medium flex -mx-2">
           <li class="text-[15px] mx-3">
-            <NuxtLink :class="{ active: isActive('/') }" to="/"
+            <NuxtLink
+              @click="checkToken"
+              :class="{ active: isActive('/') }"
+              to="/"
               >Аналитика</NuxtLink
             >
           </li>
           <li class="text-[15px] mx-3">
-            <NuxtLink :class="{ active: isActive('/doctors') }" to="/doctors"
+            <NuxtLink
+              @click="checkToken"
+              :class="{ active: isActive('/doctors') }"
+              to="/doctors"
               >Врачи</NuxtLink
             >
           </li>
           <li class="text-[15px] mx-3">
-            <NuxtLink :class="{ active: isActive('/requests') }" to="/requests"
+            <NuxtLink
+              @click="checkToken"
+              :class="{ active: isActive('/requests') }"
+              to="/requests"
               >Заявки</NuxtLink
             >
           </li>

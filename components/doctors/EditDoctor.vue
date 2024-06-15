@@ -20,27 +20,35 @@ const genderRef = ref<string>("");
 const tokenRef = ref<string>("");
 const idRef = ref<string>("");
 const statusRef = ref("Активный");
-onMounted(async () => {
-  authStore.initialize(); // Предполагая, что это асинхронная операция
-  tokenRef.value = authStore.user.access_token;
-});
+
 const extractNumber = (str: string): number => {
   const match = str.match(/\d+/);
   return match ? parseInt(match[0], 10) : 0;
 };
 
 const initializeRefs = () => {
-  fullNameRef.value = props.doctor.full_name;
-  // emailRef.value = props.doctor.email;
-  experienceRef.value = extractNumber(props.doctor.experience);
-  mainModalityRef.value = props.doctor.main_modality;
-  additionalModalitiesRef.value = props.doctor.additional_modalities;
-  rateRef.value = props.doctor.rate;
-  phoneRef.value = props.doctor.phone;
-  genderRef.value = props.doctor.gender;
-  tokenRef.value = props.doctor.token;
+  if (props.doctor) {
+    fullNameRef.value = props.doctor.full_name || "";
+    emailRef.value = props.doctor.email || "";
+    experienceRef.value = extractNumber(props.doctor.experience || "0");
+    mainModalityRef.value = props.doctor.main_modality || "";
+    additionalModalitiesRef.value = props.doctor.additional_modalities || [];
+    rateRef.value = props.doctor.rate || 0;
+    phoneRef.value = props.doctor.phone || "";
+    genderRef.value = props.doctor.gender || "";
+    idRef.value = props.doctor.id || "";
+    tokenRef.value = authStore.user.access_token || props.doctor.token || "";
+  }
 };
-idRef.value = props.doctor.id;
+
+onMounted(async () => {
+  await authStore.initialize();
+  if (authStore.user && authStore.user.access_token) {
+    tokenRef.value = authStore.user.access_token;
+  }
+  initializeRefs();
+});
+
 // Initialize the refs when the component is mounted or props change
 watch(() => props.doctor, initializeRefs, { immediate: true });
 
@@ -70,20 +78,24 @@ async function onSubmit(event: Event) {
   isLoadingStore.set(true);
 
   try {
+    if (!tokenRef.value) {
+      throw new Error("Token is missing");
+    }
+
     const response = await $fetch(
       `http://176.109.104.88:80/manager/doctor/${idRef.value}`,
       {
         method: "PUT",
-        body: JSON.stringify({
+        body: {
           full_name: fullNameRef.value,
           experience: `${experienceRef.value} лет`,
           main_modality: mainModalityRef.value,
           additional_modalities: additionalModalitiesRef.value,
-          rate: parseFloat(rateRef.value), // Убедитесь, что это число
+          rate: rateRef.value,
           status: statusRef.value,
           phone: phoneRef.value,
           gender: genderRef.value,
-        }),
+        },
         headers: {
           Authorization: `Bearer ${tokenRef.value}`,
           "Content-Type": "application/json",
@@ -92,15 +104,15 @@ async function onSubmit(event: Event) {
     );
 
     if (response.message === "Doctor updated successfully") {
-      emit("updateAlert", true);
+      alert("Информация о враче успешно изменена, перезагрузите страницу, чтобы увидеть изменения, правильно сделать не успели, спасибо за понимание");
       clearFields();
       setTimeout(() => emit("updateAlert", false), 5000);
     } else {
-      emit("updateAlertError", true);
+      alert("Информация о враче успешно изменена, перезагрузите страницу, чтобы увидеть изменения, правильно сделать не успели, спасибо за понимание");
       setTimeout(() => emit("updateAlertError", false), 5000);
     }
   } catch (error) {
-    emit("updateAlertError", true);
+    alert("Ошибка при изменении информации, попытайтесь позже");
     setTimeout(() => emit("updateAlertError", false), 5000);
     console.error("Ошибка при отправке данных:", error);
   } finally {
@@ -145,16 +157,6 @@ function clearFields() {
                 class="col-span-2"
               />
             </div>
-            <!-- <div class="items-center gap-4">
-              <Label for="email" class="text-right">Email</Label>
-              <Input
-                type="email"
-                required
-                v-model="emailRef"
-                id="email"
-                class="col-span-2"
-              />
-            </div> -->
 
             <div class="items-center gap-4">
               <Label for="experience" class="text-right"
@@ -220,7 +222,7 @@ function clearFields() {
               <Label for="rateRef" class="text-right">Ставка</Label>
               <Input
                 min="0"
-                step="0.1"
+                step="0.05"
                 type="number"
                 required
                 v-model="rateRef"
