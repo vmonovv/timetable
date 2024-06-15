@@ -7,16 +7,21 @@ const props = defineProps<DataTableRowActionsProps>();
 interface DataTableRowActionsProps {
   row: Row<Task>;
 }
-const tokenRef = ref<string>("");
 
+
+
+const tokenRef = ref<string>("");
+const route = useRoute();
+const router = useRouter();
+const id = route.params.slug as string;
 const alertRef = ref(false);
 const alertRefY = ref(false);
 const mainModalityRef = ref<string>("");
 const modalityMain = [
-  { value: "Рабочий день" },
-  { value: "Выходной" },
-  { value: "Форс мажор" },
-  { value: "Отпуск" },
+  { type: "EMERGENCY", value: "Непредвиденная ситуация" },
+  { type: "WORKING_DAY", value: "Рабочий день" },
+  { type: "VACATION", value: "Отпуск" },
+  { type: "WEEKEND", value: "Выходной" },
 ];
 
 const startTimeRef = ref<string>("");
@@ -28,14 +33,14 @@ const day_typeRef = ref<string[]>([]);
 const initializeRefs = () => {};
 
 const isLoadingStore = useIsLoadingStore();
-console.log(props.row.original);
+
 async function onSubmit(event: Event) {
   event.preventDefault();
   isLoadingStore.set(true);
 
   try {
     const response = await $fetch(
-      `http://176.109.104.88:80/manager/doctor/schedule`,
+      `https://176.109.104.88:80/manager/${id}/schedule/`,
       {
         method: "PUT",
         body: {
@@ -93,7 +98,7 @@ async function onSubmit(event: Event) {
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end" class="">
       <div>
-        <div class="flex justify-center">
+        <div class="flex flex-col">
           <!-- <Alert
             v-if="alertRef"
             class="fixed right-4 bottom-4 z-[999] max-w-[300px]"
@@ -130,43 +135,46 @@ async function onSubmit(event: Event) {
               <form @submit="onSubmit">
                 <div class="grid gap-4 py-4">
                   <div class="items-center gap-4">
-                    <Label for="name" class="text-right"
-                      >Начало рабочего дня</Label
-                    >
-
-                    <Input
-                      type="text"
-                      required
-                      v-model="props.row.original.start_time"
-                      id="name"
-                      class="col-span-2"
-                    />
+                    <div class="items-center gap-4">
+                      <Label for="start_time" class="text-right"
+                        >Начало рабочего дня</Label
+                      >
+                      <Input
+                        type="time"
+                        required
+                        v-model="props.row.original.start_time"
+                        id="start_time"
+                        class="col-span-2"
+                      />
+                    </div>
                   </div>
                   <div class="items-center gap-4">
-                    <Label for="name" class="text-right"
+                    <Label for="end_time" class="text-right"
                       >Окончание рабочего дня</Label
                     >
-
                     <Input
-                      type="text"
+                      type="time"
                       required
                       v-model="props.row.original.end_time"
-                      id="name"
+                      id="end_time"
                       class="col-span-2"
                     />
                   </div>
                   <div class="items-center gap-4">
-                    <Label for="name" class="text-right"
-                      >Окончание рабочего дня</Label
-                    >
-
-                    <Input
-                      type="text"
-                      required
-                      v-model="props.row.original.hours_worked"
-                      id="name"
-                      class="col-span-2"
-                    />
+                    <div class="items-center gap-4">
+                      <Label for="hours_worked" class="text-right"
+                        >Отработка</Label
+                      >
+                      <Input
+                        type="number"
+                        min="0"
+                        step="0.05"
+                        required
+                        v-model="props.row.original.hours_worked"
+                        id="hours_worked"
+                        class="col-span-2"
+                      />
+                    </div>
                   </div>
                   <div class="items-center gap-4">
                     <Label for="mainModalityRef" class="text-right">
@@ -181,7 +189,7 @@ async function onSubmit(event: Event) {
                           <SelectItem
                             v-for="item in modalityMain"
                             :key="item.value"
-                            :value="item.value"
+                            :value="item.type"
                           >
                             {{ item.value }}
                           </SelectItem>
@@ -209,6 +217,9 @@ async function onSubmit(event: Event) {
 
               <SheetFooter></SheetFooter>
             </SheetContent>
+          </Sheet>
+          <Sheet>
+            <DoctorsScheduleDeleteSchedule />
           </Sheet>
         </div>
       </div>

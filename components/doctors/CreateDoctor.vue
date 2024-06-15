@@ -13,7 +13,7 @@ const genderRef = ref<string>("");
 const tokenRef = ref<string>("");
 
 const alertRef = ref(false);
-const alertRefY = ref(false);
+const alertRefError = ref(false);
 const doctorsList = ref([]);
 const modalityMain = [
   { value: "Денс" },
@@ -68,15 +68,15 @@ async function onSubmit(event: Event) {
         alertRef.value = false;
       }, 5000);
     } else {
-      alertRefY.value = true;
+      alertRefError.value = true;
       setTimeout(() => {
-        alertRefY.value = false;
+        alertRefError.value = false;
       }, 5000);
     }
   } catch (error) {
-    alertRefY.value = true;
+    alertRefError.value = true;
     setTimeout(() => {
-      alertRefY.value = false;
+      alertRefError.value = false;
     }, 5000);
     console.error("Ошибка при отправке данных:", error);
   } finally {
@@ -113,7 +113,7 @@ onMounted(async () => {
       <AlertDescription> Врач {{ fullNameRef.value }} создан </AlertDescription>
     </Alert>
     <Alert
-      v-if="alertRefY"
+      v-if="alertRefError"
       class="fixed right-4 bottom-4 z-[999] max-w-[300px]"
       variant="destructive"
     >
@@ -226,7 +226,7 @@ onMounted(async () => {
               <Label for="rateRef" class="text-right">Ставка</Label>
               <Input
                 min="0"
-                step="0.1"
+                step="0.05"
                 type="number"
                 required
                 v-model="rateRef"

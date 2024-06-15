@@ -90,22 +90,15 @@ export const columns: ColumnDef<Task>[] = [
   },
 
   {
-    accessorKey: "type",
-    header: ({ column }) => h(DataTableColumnHeader, { column, title: "Тип" }),
+    accessorKey: "day_type",
+    header: ({ column }) => h(DataTableColumnHeader, { column, title: "Тип " }),
     cell: ({ row }) => {
-      const type = types.find((type) => type.value === row.getValue("type"));
-
-      if (!type) return null;
-
+      const value = row.getValue("day_type") || "Выходной";
       return h("div", { class: "flex items-center" }, [
-        h(Badge, { variant: "outline" }, () => type.label),
+        h(Badge, { variant: "outline" }, () => value),
       ]);
     },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
-    },
   },
-
   {
     id: "actions",
     cell: ({ row }) => h(DataTableRowActions, { row }),

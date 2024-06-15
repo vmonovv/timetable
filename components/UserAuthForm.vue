@@ -15,26 +15,38 @@ interface LoginResponse {
 async function onSubmit(event: Event) {
   isLoadingStore.set(true);
   event.preventDefault();
+
   try {
-    const response: LoginResponse = await $fetch(
-      "http://176.109.104.88:80/auth/login",
-      {
-        method: "POST",
-        body: {
-          email: emailRef.value,
-          password: passwordRef.value,
-        },
-      }
-    );
-    if (response) {
+    const response = await fetch("http://176.109.104.88:80/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: emailRef.value,
+        password: passwordRef.value,
+      }),
+    });
+
+    if (response.ok) {
+      const data: LoginResponse = await response.json();
       authStore.set({
-        access_token: response.access_token,
+        access_token: data.access_token,
       });
       await router.push("/profile");
+      errorMessage.value = "";
+    } else {
+      if (response.status === 401) {
+        errorMessage.value = "Неверный логин или пароль";
+      } else if (response.status === 500) {
+        errorMessage.value = "Ошибка сервера. Пожалуйста, попробуйте позже.";
+      } else {
+        errorMessage.value = `Ошибка: ${response.statusText}`;
+      }
     }
-    errorMessage.value = "";
   } catch (error) {
-    errorMessage.value = "Неверный логин или пароль";
+    console.error("Fetch error: ", error);
+    errorMessage.value = "Произошла ошибка. Пожалуйста, попробуйте позже.";
   } finally {
     emailRef.value = "";
     passwordRef.value = "";

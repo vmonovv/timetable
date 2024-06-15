@@ -178,7 +178,7 @@ onMounted(async () => {
         >
           <div class="text-[15px] text-[#636363] font-normal">
             Отработка за пол месяца:
-            <span class="font-medium  text-black"
+            <span class="font-medium text-black"
               >{{ scheduleAllRef.half_month_hours }}ч</span
             >
           </div>
