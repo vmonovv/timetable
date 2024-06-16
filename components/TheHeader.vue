@@ -5,11 +5,13 @@ const isActive = (path: string): boolean => {
   return route.path === path;
 };
 const authStore = useAuthStore();
+const roleStore = useRoleStore();
 const tokenRef = ref("");
 
 onMounted(async () => {
   await authStore.initialize(); // Предполагая, что это асинхронная операция
   tokenRef.value = authStore.user.access_token;
+  await roleStore.fetchUserData();
 });
 const router = useRouter();
 const checkToken = async () => {
@@ -37,6 +39,7 @@ const checkToken = async () => {
         <ul class="text-[#64748B] font-medium flex -mx-2">
           <li class="text-[15px] mx-3">
             <NuxtLink
+              v-if="roleStore.role == 'manager'"
               @click="checkToken"
               :class="{ active: isActive('/') }"
               to="/"
@@ -53,6 +56,7 @@ const checkToken = async () => {
           </li>
           <li class="text-[15px] mx-3">
             <NuxtLink
+              v-if="roleStore.role == 'manager'"
               @click="checkToken"
               :class="{ active: isActive('/requests') }"
               to="/requests"

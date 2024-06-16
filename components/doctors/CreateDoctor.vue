@@ -11,7 +11,7 @@ const rateRef = ref<number>(0);
 const phoneRef = ref<string>("");
 const genderRef = ref<string>("");
 const tokenRef = ref<string>("");
-
+const roleStore = useRoleStore();
 const alertRef = ref(false);
 const alertRefError = ref(false);
 const doctorsList = ref([]);
@@ -36,42 +36,80 @@ const modality = [
 async function onSubmit(event: Event) {
   event.preventDefault();
   isLoadingStore.set(true);
-
   try {
-    const response = await $fetch(
-      "http://176.109.104.88:80/manager/create_doctor",
-      {
-        method: "POST",
-        body: {
-          full_name: fullNameRef.value,
-          email: emailRef.value,
-          experience: `${experienceRef.value} лет`,
-          main_modality: mainModalityRef.value,
-          additional_modality: additionalModalitiesRef.value,
-          rate: rateRef.value,
-          phone: phoneRef.value,
-          gender: genderRef.value,
-        },
-        headers: {
-          Authorization: `Bearer ${tokenRef.value}`,
-          "Content-Type": "application/json",
-        },
+    await roleStore.fetchUserData();
+    if (roleStore.role == "manager") {
+      const response = await $fetch(
+        "http://176.109.104.88:80/manager/create_doctor",
+        {
+          method: "POST",
+          body: {
+            full_name: fullNameRef.value,
+            email: emailRef.value,
+            experience: `${experienceRef.value} лет`,
+            main_modality: mainModalityRef.value,
+            additional_modality: additionalModalitiesRef.value,
+            rate: rateRef.value,
+            phone: phoneRef.value,
+            gender: genderRef.value,
+          },
+          headers: {
+            Authorization: `Bearer ${tokenRef.value}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (
+        response.message ===
+        "Doctor created successfully and approval ticket generated"
+      ) {
+        alertRef.value = true;
+        clearFields();
+        setTimeout(() => {
+          alertRef.value = false;
+        }, 5000);
+      } else {
+        alertRefError.value = true;
+        setTimeout(() => {
+          alertRefError.value = false;
+        }, 5000);
       }
-    );
-    if (
-      response.message ===
-      "Doctor created successfully and approval ticket generated"
-    ) {
-      alertRef.value = true;
-      clearFields();
-      setTimeout(() => {
-        alertRef.value = false;
-      }, 5000);
-    } else {
-      alertRefError.value = true;
-      setTimeout(() => {
-        alertRefError.value = false;
-      }, 5000);
+    } else if (roleStore.role == "hr") {
+      const response = await $fetch(
+        "http://176.109.104.88:80/hr/create_doctor",
+        {
+          method: "POST",
+          body: {
+            full_name: fullNameRef.value,
+            email: emailRef.value,
+            experience: `${experienceRef.value} лет`,
+            main_modality: mainModalityRef.value,
+            additional_modality: additionalModalitiesRef.value,
+            rate: rateRef.value,
+            phone: phoneRef.value,
+            gender: genderRef.value,
+          },
+          headers: {
+            Authorization: `Bearer ${tokenRef.value}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (
+        response.message ===
+        "Doctor created successfully and approval ticket generated"
+      ) {
+        alert("Заявка на добавление нового врача отправлена руководителю");
+        clearFields();
+        setTimeout(() => {
+          alertRef.value = false;
+        }, 5000);
+      } else {
+        alertRefError.value = true;
+        setTimeout(() => {
+          alertRefError.value = false;
+        }, 5000);
+      }
     }
   } catch (error) {
     alertRefError.value = true;

@@ -3,6 +3,7 @@ import { defineProps } from "vue";
 
 const authStore = useAuthStore();
 const doctorsListStore = useDoctorsList();
+const roleStore = useRoleStore();
 const tokenRef = ref<string>("");
 const props = defineProps({
   doctor: Object,
@@ -15,17 +16,31 @@ onMounted(async () => {
 });
 
 const del = async () => {
-  const response = await $fetch(
-    `http://176.109.104.88:80/manager/doctor/${props.doctor.id}`,
-    {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${tokenRef.value}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
-  await doctorsListStore.fetchUserData();
+  await roleStore.fetchUserData();
+  if (roleStore.role == "manager") {
+    const response = await $fetch(
+      `http://176.109.104.88:80/manager/doctor/${props.doctor.id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${tokenRef.value}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    await doctorsListStore.fetchUserData();
+  } else if (roleStore.role == "hr") {
+    const response = await $fetch(
+      `http://176.109.104.88:80/hr/doctor/${props.doctor.id}/delete`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${tokenRef.value}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  }
 };
 </script>
 <template>

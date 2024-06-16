@@ -7,6 +7,7 @@ import { ref, onMounted } from "vue";
 
 // Использование магазинов состояния
 const ticketsListStore = useTicketsList();
+const roleStore = useRoleStore();
 const authStore = useAuthStore();
 const tokenRef = ref<string>("");
 
@@ -39,6 +40,7 @@ onMounted(async () => {
   authStore.initialize();
   tokenRef.value = authStore.user.access_token;
   await ticketsListStore.fetchTicketListData();
+  await roleStore.fetchUserData();
 
   transformedData.value = transformTicketsToAccountsAndMails(
     ticketsListStore.tickets_list
@@ -86,7 +88,7 @@ const transformTicketsToAccountsAndMails = (
 
 <template>
   <TheHeader />
-  <div v-if="tokenRef" class="md:hidden">
+  <div v-if="tokenRef && roleStore.role == 'manager'" class="md:hidden">
     <image
       src="/examples/mail-dark.png"
       :width="1280"

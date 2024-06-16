@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { defineProps, ref, watch, onMounted, defineEmits } from "vue";
-
+const doctorsListStore = useDoctorsList();
 const props = defineProps({
   doctor: Object,
 });
 const emit = defineEmits(["updateAlert", "updateAlertError"]);
 
+const roleStore = useRoleStore();
 const authStore = useAuthStore();
 const isLoadingStore = useIsLoadingStore();
 
@@ -76,40 +77,80 @@ const modality = [
 async function onSubmit(event: Event) {
   event.preventDefault();
   isLoadingStore.set(true);
+  await roleStore.fetchUserData();
 
   try {
     if (!tokenRef.value) {
       throw new Error("Token is missing");
     }
 
-    const response = await $fetch(
-      `http://176.109.104.88:80/manager/doctor/${idRef.value}`,
-      {
-        method: "PUT",
-        body: {
-          full_name: fullNameRef.value,
-          experience: `${experienceRef.value} лет`,
-          main_modality: mainModalityRef.value,
-          additional_modalities: additionalModalitiesRef.value,
-          rate: rateRef.value,
-          status: statusRef.value,
-          phone: phoneRef.value,
-          gender: genderRef.value,
-        },
-        headers: {
-          Authorization: `Bearer ${tokenRef.value}`,
-          "Content-Type": "application/json",
-        },
+    if (roleStore.role == "manager") {
+      const response = await $fetch(
+        `http://176.109.104.88:80/manager/doctor/${idRef.value}`,
+        {
+          method: "PUT",
+          body: {
+            full_name: fullNameRef.value,
+            experience: `${experienceRef.value} лет`,
+            main_modality: mainModalityRef.value,
+            additional_modalities: additionalModalitiesRef.value,
+            rate: rateRef.value,
+            status: statusRef.value,
+            phone: phoneRef.value,
+            gender: genderRef.value,
+          },
+          headers: {
+            Authorization: `Bearer ${tokenRef.value}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+   
+      if (response.message === "Doctor updated successfully") {
+        await doctorsListStore.fetchUserData();
+        alert("Информация о враче успешно изменена,");
+        clearFields();
+        setTimeout(() => emit("updateAlert", false), 5000);
+      } else {
+        await doctorsListStore.fetchUserData();
+        alert("Информация о враче успешно изменена,");
+        
+        setTimeout(() => emit("updateAlertError", false), 5000);
       }
-    );
+    } else if (roleStore.role == "hr") {
+      const response = await $fetch(
+        `http://176.109.104.88:80/hr/doctor/${idRef.value}/update`,
+        {
+          method: "PUT",
+          body: {
+            full_name: fullNameRef.value,
+            experience: `${experienceRef.value} лет`,
+            main_modality: mainModalityRef.value,
+            additional_modalities: additionalModalitiesRef.value,
+            rate: rateRef.value,
+            status: statusRef.value,
+            phone: phoneRef.value,
+            gender: genderRef.value,
+          },
+          headers: {
+            Authorization: `Bearer ${tokenRef.value}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-    if (response.message === "Doctor updated successfully") {
-      alert("Информация о враче успешно изменена, перезагрузите страницу, чтобы увидеть изменения, правильно сделать не успели, спасибо за понимание");
-      clearFields();
-      setTimeout(() => emit("updateAlert", false), 5000);
-    } else {
-      alert("Информация о враче успешно изменена, перезагрузите страницу, чтобы увидеть изменения, правильно сделать не успели, спасибо за понимание");
-      setTimeout(() => emit("updateAlertError", false), 5000);
+      if (response.message === "Doctor updated successfully") {
+        alert(
+          "Запрос на изменение информации о враче отправлена на согласование руководителю"
+        );
+        clearFields();
+        setTimeout(() => emit("updateAlert", false), 5000);
+      } else {
+        alert(
+          "Запрос на изменение информации о враче отправлена на согласование руководителю"
+        );
+        setTimeout(() => emit("updateAlertError", false), 5000);
+      }
     }
   } catch (error) {
     alert("Ошибка при изменении информации, попытайтесь позже");

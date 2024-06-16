@@ -5,8 +5,34 @@ import RecentSales from "@/components/dashboard/RecentSales.vue";
 import Search from "@/components/dashboard/Search.vue";
 import analyticsType from "@/data/analytics/type.json";
 import analyticsQuantity from "@/data/analytics/quantity.json";
+import {
+  DateFormatter,
+  type DateValue,
+  getLocalTimeZone,
+  today,
+  createCalendar,
+  toCalendar,
+} from "@internationalized/date";
+
+import { cn } from "@/lib/utils";
+
+const roleStore = useRoleStore();
+const df = new DateFormatter("ru-RU", {
+  dateStyle: "long",
+});
+const router = useRouter();
+const value = ref(today(getLocalTimeZone())) as Ref<DateValue>;
+function getNextWeek(date) {
+  if (date) {
+    const nextWeek = new Date(date);
+    nextWeek.setDate(nextWeek.getDate() + 6);
+    return nextWeek;
+  }
+  return null;
+}
+
 const isLoadingStore = useIsLoadingStore();
-console.log(isLoadingStore.isLoading);
+
 interface AnalyticsItem {
   type: string;
   quantity: number;
@@ -69,17 +95,85 @@ const data1 = [
 
 const authStore = useAuthStore();
 const tokenRef = ref("");
-
+const counts = ref<any>("");
+const transformedData = ref<ExportData | null>(null);
+const transformedDataTwo = ref<ExportData | null>(null);
 onMounted(async () => {
+  await roleStore.fetchUserData();
+  if (!(roleStore.role == "manager")) {
+    router.push("/doctors");
+  }
   await authStore.initialize(); // Предполагая, что это асинхронная операция
   tokenRef.value = authStore.user.access_token;
+
+  const response = await $fetch(
+    `http://176.109.104.88:80/manager/study_counts?year=${value.value.year}&week_number=10`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${tokenRef.value}`,
+      },
+    }
+  );
+
+  const transformData = (response: any): any[] => {
+    return [
+      {
+        name: "Денс",
+        Количество: Math.round(response.densitometry),
+      },
+      {
+        name: "КТ",
+        Количество: Math.round(response.ct),
+        "С КУ 1 Зона": Math.round(response.ct_with_cu_1_zone),
+        "С КУ 2 и более зон": Math.round(response.ct_with_cu_2_or_more_zones),
+      },
+      {
+        name: "МРТ",
+        Количество: Math.round(response.mrt),
+        "С КУ 1 Зона": Math.round(response.mrt_with_cu_1_zone),
+        "С КУ 2 и более зон": Math.round(response.mrt_with_cu_2_or_more_zones),
+      },
+    ];
+  };
+  const transformDataTwo = (response: any): any[] => {
+    return [
+      {
+        name: "ММГ",
+        Количество: Math.round(response.mmg),
+      },
+      {
+        name: "РГ",
+        Количество: Math.round(response.rg),
+      },
+      {
+        name: "ФЛГ",
+        Количество: Math.round(response.fluorography),
+      },
+    ];
+  };
+  transformedData.value = transformData(response);
+  transformedDataTwo.value = transformDataTwo(response);
+});
+
+watch(value, (newValue, oldValue) => {
+  // console.log("Выбранная дата изменилась:", newValue);
+  // const response = await $fetch(
+  //   `http://176.109.104.88:80/manager/study_counts?year=${value.value.year}&week_number=10`,
+  //   {
+  //     method: "GET",
+  //     headers: {
+  //       Authorization: `Bearer ${tokenRef.value}`,
+  //     },
+  //   }
+  // );
 });
 </script>
 
 <template>
   <TheHeader />
 
-  <div v-if="tokenRef" class="container">
+  <div v-if="tokenRef && roleStore.role == 'manager'" class="container">
     <div class="hidden flex-col md:flex">
       <div class="flex-1 space-y-4 pb-6 pt-6">
         <div class="flex items-center justify-between space-y-2 pb-6">
@@ -90,58 +184,40 @@ onMounted(async () => {
             </p>
           </div>
           <div class="flex items-center space-x-2">
-            <!-- <Pagination
-             v-slot="{ page }"
-              :total="100"
-              :sibling-count="1"
-              show-edges
-              :default-page="2"
-            >
-           
-              <PaginationList
-                v-slot="{ items }"
-                class="flex items-center gap-1"
-              >
-                <PaginationFirst />
-                <PaginationPrev />
+            <Popover>
+              <PopoverTrigger as-child>
+                <Button
+                  variant="outline"
+                  :class="
+                    cn(
+                      'w-[325px] justify-center text-left font-normal',
+                      !value && 'text-muted-foreground'
+                    )
+                  "
+                >
+                  <CalendarIcon class="mr-2 h-4 w-4 -mt-1" />
+                  {{
+                    value
+                      ? df.format(value.toDate(getLocalTimeZone()))
+                      : "Выбрать дату"
+                  }}
+                  {{
+                    value
+                      ? " - " +
+                        df.format(getNextWeek(value.toDate(getLocalTimeZone())))
+                      : ""
+                  }}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent class="flex w-auto flex-col gap-y-2 p-2">
+                <Calendar v-model="value" />
+              </PopoverContent>
+            </Popover>
 
-                <template v-for="(item, index) in items">
-                  <PaginationListItem
-                    v-if="item.type === 'page'"
-                    :key="index"
-                    :value="item.value"
-                    as-child
-                  >
-                    <Button
-                      class="w-9 h-9 p-0"
-                      :variant="item.value === page ? 'default' : 'outline'"
-                    >
-                      {{ item.value }}
-                    </Button>
-                  </PaginationListItem>
-                  <PaginationEllipsis v-else :key="item.type" :index="index" />
-                </template>
-
-                <PaginationNext />
-                <PaginationLast />
-              </PaginationList>
-            </Pagination> -->
-
-            <!-- :table="table" -->
-            <DateRangePicker />
-            <!-- <Cal/> -->
             <Button>Экспорт</Button>
           </div>
         </div>
         <Tabs default-value="overview" class="space-y-4">
-          <!-- <TabsList>
-            <TabsTrigger value="overview"> Overview </TabsTrigger>
-            <TabsTrigger value="analytics" disabled> Analytics </TabsTrigger>
-            <TabsTrigger value="reports" disabled> Reports </TabsTrigger>
-            <TabsTrigger value="notifications" disabled>
-              Notifications
-            </TabsTrigger>
-          </TabsList> -->
           <TabsContent value="overview" class="space-y-4">
             <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               <Card
@@ -192,11 +268,7 @@ onMounted(async () => {
             </div>
 
             <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-6">
-              <Card
-                v-for="item in analyticsQuantity"
-                :key="item.id"
-                class="col-span-3"
-              >
+              <Card class="col-span-3">
                 <CardHeader>
                   <CardTitle>
                     <span class="text-[#787878] font-normal">
@@ -208,7 +280,7 @@ onMounted(async () => {
                 <CardContent class="pl-6">
                   <BarChart
                     class="text-black fill-black"
-                    :data="data"
+                    :data="transformedData"
                     :categories="[
                       'Количество',
                       'С КУ 1 Зона',
@@ -238,7 +310,7 @@ onMounted(async () => {
                 <CardContent class="pl-2">
                   <BarChart
                     class="text-black fill-black"
-                    :data="data1"
+                    :data="transformedDataTwo"
                     :categories="['Количество']"
                     :index="'name'"
                     :rounded-corners="4"
@@ -252,17 +324,6 @@ onMounted(async () => {
                   />
                 </CardContent>
               </Card>
-              <!-- <Card class="col-span-3">
-                <CardHeader>
-                  <CardTitle>Recent Sales</CardTitle>
-                  <CardDescription>
-                    You made 265 sales this month.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <RecentSales />
-                </CardContent>
-              </Card> -->
             </div>
           </TabsContent>
         </Tabs>
