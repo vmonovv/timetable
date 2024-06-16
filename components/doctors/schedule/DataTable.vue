@@ -103,6 +103,9 @@ const table = useVueTable({
             >
               <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
                 <FlexRender
+                  :class="{
+                    'opacity-[0.4]': cell.row.original.day_type === 'Выходной',
+                  }"
                   :render="cell.column.columnDef.cell"
                   :props="cell.getContext()"
                 />

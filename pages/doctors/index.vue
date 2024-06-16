@@ -2,20 +2,21 @@
 const authStore = useAuthStore();
 const doctorsListStore = useDoctorsList();
 const tokenRef = ref<string>("");
-
+const roleStore = useRoleStore();
+const router = useRouter();
 onMounted(async () => {
-  await authStore.initialize(); // Предполагая, что это асинхронная операция
+  await authStore.initialize();
   tokenRef.value = authStore.user.access_token;
   await doctorsListStore.fetchUserData();
+  await roleStore.fetchUserData();
+  if (roleStore.role == "doctor") {
+    router.push("/profile");
+  }
 });
 
-function handleUpdateAlert(status: boolean) {
-  updateAlert.value = status;
-}
-
-function handleUpdateAlertError(status: boolean) {
-  updateAlertError.value = status;
-}
+const expor = () => {
+  alert("Не успели реализовать");
+};
 </script>
 <template>
   <TheHeader />
@@ -28,7 +29,10 @@ function handleUpdateAlertError(status: boolean) {
               <div class="ml-auto flex items-center gap-2 mb-5">
                 <Button size="sm" variant="outline" class="h-7 gap-1">
                   <Icon class="h-4 w-4" name="mdi:file-outline" />
-                  <span class="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                  <span
+                    @click="expor"
+                    class="sr-only sm:not-sr-only sm:whitespace-nowrap"
+                  >
                     Экспорт
                   </span>
                 </Button>
@@ -122,7 +126,7 @@ function handleUpdateAlertError(status: boolean) {
                             {{ item.status }}
                           </Badge>
                           <Badge
-                            v-else-if="item.status == 'В отпуске'"
+                            v-else-if="item.status == 'Ожидает подтверждения'"
                             class="text-xs bg-[#FFEFC7] text-[#F4B003] border-0 font-normal order-0 px-3 py-2"
                             variant="outline"
                           >

@@ -5,6 +5,8 @@ import RecentSales from "@/components/dashboard/RecentSales.vue";
 import Search from "@/components/dashboard/Search.vue";
 import analyticsType from "@/data/analytics/type.json";
 import analyticsQuantity from "@/data/analytics/quantity.json";
+import { watch } from "vue";
+
 import {
   DateFormatter,
   type DateValue,
@@ -20,6 +22,7 @@ const roleStore = useRoleStore();
 const df = new DateFormatter("ru-RU", {
   dateStyle: "long",
 });
+const dateSend = ref("");
 const router = useRouter();
 const value = ref(today(getLocalTimeZone())) as Ref<DateValue>;
 function getNextWeek(date) {
@@ -100,16 +103,21 @@ const transformedData = ref<ExportData | null>(null);
 const transformedDataTwo = ref<ExportData | null>(null);
 onMounted(async () => {
   await roleStore.fetchUserData();
-  if (!(roleStore.role == "manager")) {
+  if (roleStore.role == "manager") {
+  } else if (roleStore.role == "hr") {
     router.push("/doctors");
+  } else {
+    router.push("/profile");
   }
+
   await authStore.initialize(); // Предполагая, что это асинхронная операция
   tokenRef.value = authStore.user.access_token;
-
+  dateSend.value = String(value.value);
   const response = await $fetch(
-    `http://176.109.104.88:80/manager/study_counts?year=${value.value.year}&week_number=10`,
+    `http://176.109.104.88:80/manager/study_counts`,
     {
-      method: "GET",
+      method: "POST",
+      body: JSON.stringify({ start_date: dateSend.value }),
       headers: {
         Authorization: `Bearer ${tokenRef.value}`,
       },
@@ -156,18 +164,102 @@ onMounted(async () => {
   transformedDataTwo.value = transformDataTwo(response);
 });
 
-watch(value, (newValue, oldValue) => {
-  // console.log("Выбранная дата изменилась:", newValue);
-  // const response = await $fetch(
-  //   `http://176.109.104.88:80/manager/study_counts?year=${value.value.year}&week_number=10`,
-  //   {
-  //     method: "GET",
-  //     headers: {
-  //       Authorization: `Bearer ${tokenRef.value}`,
-  //     },
-  //   }
-  // );
+watch(value, async (newValue, oldValue) => {
+  dateSend.value = String(value.value);
+  try {
+    // Убедитесь, что значение token инициализировано
+    if (!tokenRef.value) {
+      await authStore.initialize(); // Предполагая, что это асинхронная операция
+      tokenRef.value = authStore.user.access_token;
+    }
+
+    const response = await $fetch(
+      `http://176.109.104.88:80/manager/study_counts`,
+      {
+        method: "POST",
+        body: JSON.stringify({ start_date: dateSend.value }),
+        headers: {
+          Authorization: `Bearer ${tokenRef.value}`,
+          "Content-Type": "application/json", // Указываем тип контента
+        },
+      }
+    );
+
+    const transformData = (response: any): any[] => {
+      return [
+        {
+          name: "Денс",
+          Количество: Math.round(response.densitometry),
+        },
+        {
+          name: "КТ",
+          Количество: Math.round(response.ct),
+          "С КУ 1 Зона": Math.round(response.ct_with_cu_1_zone),
+          "С КУ 2 и более зон": Math.round(response.ct_with_cu_2_or_more_zones),
+        },
+        {
+          name: "МРТ",
+          Количество: Math.round(response.mrt),
+          "С КУ 1 Зона": Math.round(response.mrt_with_cu_1_zone),
+          "С КУ 2 и более зон": Math.round(
+            response.mrt_with_cu_2_or_more_zones
+          ),
+        },
+      ];
+    };
+    const transformDataTwo = (response: any): any[] => {
+      return [
+        {
+          name: "ММГ",
+          Количество: Math.round(response.mmg),
+        },
+        {
+          name: "РГ",
+          Количество: Math.round(response.rg),
+        },
+        {
+          name: "ФЛГ",
+          Количество: Math.round(response.fluorography),
+        },
+      ];
+    };
+    transformedData.value = transformData(response);
+    transformedDataTwo.value = transformDataTwo(response);
+  
+
+    // Обработка ответа (например, обновление состояния)
+  } catch (error) {
+    console.error("Error fetching study counts:", error); // Обработка ошибок
+  }
 });
+
+const exportStudyCounts = async (format) => {
+  const response = await fetch(
+    "http://176.109.104.88:80/manager/export_study_counts",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${tokenRef.value}`,
+      },
+      body: JSON.stringify({
+        start_date: dateSend.value,
+        format: format,
+      }),
+    }
+  );
+
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.style.display = "none";
+  a.href = url;
+  a.download = format === "excel" ? "study_counts.xlsx" : "study_counts.csv";
+  document.body.appendChild(a);
+  a.click();
+  window.URL.revokeObjectURL(url);
+};
 </script>
 
 <template>
@@ -214,7 +306,27 @@ watch(value, (newValue, oldValue) => {
               </PopoverContent>
             </Popover>
 
-            <Button>Экспорт</Button>
+            <AlertDialog>
+              <AlertDialogTrigger as-child>
+                <Button class="bg-[#2463EB] text-white" variant="outline"
+                  >Экспорт
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Выберите формат экспорта</AlertDialogTitle>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Отмена</AlertDialogCancel>
+                  <AlertDialogAction @click="exportStudyCounts('excel')"
+                    >Excel</AlertDialogAction
+                  >
+                  <AlertDialogAction @click="exportStudyCounts('csv')"
+                    >CSV</AlertDialogAction
+                  >
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </div>
         <Tabs default-value="overview" class="space-y-4">

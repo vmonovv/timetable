@@ -48,6 +48,7 @@ const checkToken = async () => {
           </li>
           <li class="text-[15px] mx-3">
             <NuxtLink
+            v-if="roleStore.role !== 'doctor'"
               @click="checkToken"
               :class="{ active: isActive('/doctors') }"
               to="/doctors"

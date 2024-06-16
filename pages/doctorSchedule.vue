@@ -14,25 +14,27 @@ interface Doctor {
 }
 
 const authStore = useAuthStore();
-const doctorsListStore = useDoctorsList();
+
 const tokenRef = ref<string>("");
 const route = useRoute();
 const router = useRouter();
 const scheduleRef = ref<any[]>([]);
 const scheduleAllRef = ref<any[]>([]);
-const doctorRef = ref<Doctor | null>(null);
+
 const slug = route.params.slug as string;
 
 const currentMonth = ref<number>(new Date().getMonth() + 1);
 const currentYear = ref<number>(new Date().getFullYear());
-const roleStore = useRoleStore();
+
+
+
 
 const fetchSchedule = async (year: number, month: number) => {
-  if (!doctorRef.value) return;
+
 
   try {
     const response = await $fetch(
-      `http://176.109.104.88:80/doctor/${doctorRef.value.id}/schedule?year=${year}&month=${month}`,
+      `http://176.109.104.88:80/doctor/schedule?year=${year}&month=${month}`,
       {
         method: "GET",
         headers: {
@@ -134,21 +136,18 @@ watch(
 onMounted(async () => {
   await authStore.initialize();
   tokenRef.value = authStore.user.access_token;
-  await roleStore.fetchUserData();
-  await doctorsListStore.fetchUserData();
-  doctorRef.value =
-    doctorsListStore.doctors_list.find((doctor) => doctor.id === slug) || null;
 
-  if (!doctorRef.value) {
-    router.push("/404");
-    return;
-  }
+
+  //   if (!doctorRef.value) {
+  //     router.push("/404");
+  //     return;
+  //   }
 
   await fetchSchedule(currentYear.value, currentMonth.value);
 });
 </script>
 <template>
-  <div v-if="tokenRef">
+  <div >
     <TheHeader />
     <div class="container">
       <div class="hidden h-full flex-1 flex-col pb-8 md:flex">
@@ -205,10 +204,7 @@ onMounted(async () => {
               </div>
             </div>
             <div>
-              <DoctorsScheduleCreateSchedule
-                v-if="roleStore.role == 'manager'"
-                :schedule="scheduleRef"
-              />
+             
             </div>
           </div>
           <DataTable :data="scheduleRef" :columns="columns" />
@@ -253,5 +249,5 @@ onMounted(async () => {
       </div>
     </div>
   </div>
-  <LayoutsLoader v-else />
+
 </template>

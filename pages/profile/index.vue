@@ -52,7 +52,7 @@ onMounted(async () => {
       <div v-else-if="roleStore.role == 'doctor'">
         <NuxtLink
           class="s mt-5 inline-block px-4 py-2 border-2 border-[#0070FF] text-[#0070FF] hover:bg-[#0070FF] hover:text-white font-medium transition duration-300 ease-in-out rounded-lg"
-          to="/doctors"
+          to="/doctorSchedule"
           >в личный кабинет</NuxtLink
         >
       </div>

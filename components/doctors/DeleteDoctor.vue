@@ -28,6 +28,15 @@ const del = async () => {
         },
       }
     );
+    if (
+      response.message ===
+      " Doctor deleted successfully and deletion ticket generated"
+    ) {
+      alert("Доктор удалён");
+    } else {
+      alert("Доктор удалён");
+    }
+
     await doctorsListStore.fetchUserData();
   } else if (roleStore.role == "hr") {
     const response = await $fetch(
@@ -40,6 +49,14 @@ const del = async () => {
         },
       }
     );
+    if (
+      response.message ===
+      " Doctor deleted successfully and deletion ticket generated"
+    ) {
+      alert("Запрос на удаление доктора отправлен");
+    } else {
+      alert("Запрос на удаление доктора отправлен");
+    }
   }
 };
 </script>

@@ -7,7 +7,8 @@ const props = defineProps<DataTableRowActionsProps>();
 interface DataTableRowActionsProps {
   row: Row<Task>;
 }
-
+const roleStore = useRoleStore();
+const authStore = useAuthStore();
 const tokenRef = ref<string>("");
 const route = useRoute();
 const router = useRouter();
@@ -19,7 +20,6 @@ const modalityMain = [
   { type: "EMERGENCY", value: "Непредвиденная ситуация" },
   { type: "WORKING_DAY", value: "Рабочий день" },
   { type: "VACATION", value: "Отпуск" },
-  { type: "WEEKEND", value: "Выходной" },
 ];
 
 const startTimeRef = ref<string>("");
@@ -32,22 +32,29 @@ const initializeRefs = () => {};
 
 const isLoadingStore = useIsLoadingStore();
 
+// onMounted(async () => {
+//   await roleStore.fetchUserData();
+// });
+
 async function onSubmit(event: Event) {
   event.preventDefault();
   isLoadingStore.set(true);
+  await authStore.initialize();
+  tokenRef.value = authStore.user.access_token;
 
   try {
     const response = await $fetch(
-      `https://176.109.104.88:80/manager/${id}/schedule/`,
+      `http://176.109.104.88:80/manager/doctor/${id}/schedule`,
       {
         method: "PUT",
-        body: {
+        body: JSON.stringify({
+          date: props.row.original.date,
           start_time: props.row.original.start_time,
           end_time: props.row.original.end_time,
           break_minutes: props.row.original.break_minutes,
           hours_worked: props.row.original.hours_worked,
           day_type: props.row.original.day_type,
-        },
+        }),
         headers: {
           Authorization: `Bearer ${tokenRef.value}`,
           "Content-Type": "application/json",
@@ -59,13 +66,15 @@ async function onSubmit(event: Event) {
       response.message ===
       "Doctor created successfully and approval ticket generated"
     ) {
-      alertRef.value = true;
+      alert("Расписание изменено");
       clearFields();
       setTimeout(() => {
-        alertRef.value = false;
+        // alertRef.value = false;
       }, 5000);
     } else {
-      alertRefY.value = true;
+      alert(
+        "Расписание обновлено, перезагрузите страницу, чтобы увидеть изменения"
+      );
       setTimeout(() => {
         alertRefY.value = false;
       }, 5000);
@@ -80,12 +89,62 @@ async function onSubmit(event: Event) {
     isLoadingStore.set(false);
   }
 }
+
+const del = async () => {
+  try {
+    await authStore.initialize();
+    tokenRef.value = authStore.user.access_token;
+    const response = await $fetch(
+      `http://176.109.104.88:80/manager/doctor/${id}/schedule/${props.row.original.date}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${tokenRef.value}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (
+      response.message ===
+      "Doctor created successfully and approval ticket generated"
+    ) {
+      alert(
+        "Расписание удалено, перезагрузите страницу, чтобы увидеть изменения"
+      );
+
+      setTimeout(() => {
+        // alertRef.value = false;
+      }, 5000);
+    } else {
+      alert(
+        "Расписание удалено, перезагрузите страницу, чтобы увидеть изменения"
+      );
+
+      setTimeout(() => {
+        alertRefY.value = false;
+      }, 5000);
+    }
+  } catch (error) {
+    alertRefY.value = true;
+    setTimeout(() => {
+      alertRefY.value = false;
+    }, 5000);
+    console.error("Ошибка при отправке данных:", error);
+  } finally {
+    isLoadingStore.set(false);
+  }
+};
+const weekend = ref(props.row.original.day_type);
+const openMenu = async () => {
+  await roleStore.fetchUserData();
+};
 </script>
 
 <template>
   <DropdownMenu>
     <DropdownMenuTrigger as-child>
       <Button
+        @click="openMenu"
         variant="ghost"
         class="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
       >
@@ -118,7 +177,7 @@ async function onSubmit(event: Event) {
             </AlertDescription>
           </Alert> -->
           <Sheet>
-            <SheetTrigger>
+            <SheetTrigger v-if="!(weekend == 'Выходной') && roleStore.role == 'manager'">
               <div class="text-[14px] pl-2">Изменить</div>
             </SheetTrigger>
             <SheetContent>
@@ -178,7 +237,7 @@ async function onSubmit(event: Event) {
                     <Label for="mainModalityRef" class="text-right">
                       Тип
                     </Label>
-                    <Select v-model="mainModalityRef">
+                    <Select v-model="props.row.original.day_type">
                       <SelectTrigger class="w-full">
                         <SelectValue placeholder="Выберите тип" />
                       </SelectTrigger>
@@ -216,8 +275,30 @@ async function onSubmit(event: Event) {
               <SheetFooter></SheetFooter>
             </SheetContent>
           </Sheet>
-          <Sheet>
-            <DoctorsScheduleDeleteSchedule />
+          <Sheet v-if="!(weekend == 'Выходной') && roleStore.role == 'manager'">
+            <AlertDialog>
+              <AlertDialogTrigger class="text-[14px] pl-2"
+                >Удалить</AlertDialogTrigger
+              >
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle
+                    >Вы уверены, что хотите удалить
+                    расписание?</AlertDialogTitle
+                  >
+                  <AlertDialogDescription>
+                    После удаления, оно будет очищено из базы данных без
+                    возможности восстановления
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Отмена</AlertDialogCancel>
+                  <AlertDialogAction @click="del(item)"
+                    >Удалить</AlertDialogAction
+                  >
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </Sheet>
         </div>
       </div>
