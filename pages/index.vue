@@ -108,8 +108,10 @@ onMounted(async () => {
   if (roleStore.role == "manager") {
   } else if (roleStore.role == "hr") {
     router.push("/doctors");
-  } else {
+  } else if (roleStore.role == "doctor") {
     router.push("/profile");
+  } else {
+    router.push("/login");
   }
 
   await authStore.initialize(); // Предполагая, что это асинхронная операция
