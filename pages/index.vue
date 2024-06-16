@@ -96,6 +96,8 @@ const data1 = [
   },
 ];
 
+const datas = ref("");
+
 const authStore = useAuthStore();
 const tokenRef = ref("");
 const counts = ref<any>("");
@@ -123,6 +125,18 @@ onMounted(async () => {
       },
     }
   );
+  const responseTwo = await $fetch(
+    `http://176.109.104.88:80/manager/analyze_doctors`,
+    {
+      method: "POST",
+      body: JSON.stringify({ start_date: dateSend.value }),
+      headers: {
+        Authorization: `Bearer ${tokenRef.value}`,
+      },
+    }
+  );
+
+  console.log(responseTwo);
 
   const transformData = (response: any): any[] => {
     return [
@@ -225,7 +239,19 @@ watch(value, async (newValue, oldValue) => {
     };
     transformedData.value = transformData(response);
     transformedDataTwo.value = transformDataTwo(response);
-  
+
+    const responseTwo = await $fetch(
+      `http://176.109.104.88:80/manager/analyze_doctors`,
+      {
+        method: "POST",
+        body: JSON.stringify({ start_date: dateSend.value }),
+        headers: {
+          Authorization: `Bearer ${tokenRef.value}`,
+        },
+      }
+    );
+
+    datas.value = responseTwo;
 
     // Обработка ответа (например, обновление состояния)
   } catch (error) {
@@ -336,7 +362,7 @@ const exportStudyCounts = async (format) => {
                 :class="{
                   'bg-[#FFE3E3]': !item.isEnough && !item.isFixable,
                 }"
-                v-for="item in analyticsType"
+                v-for="item in datas"
                 :key="item.id"
               >
                 <CardHeader class="pb-2">
