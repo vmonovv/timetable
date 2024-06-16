@@ -191,12 +191,12 @@ function onExpand() {
               <TabsTrigger value="all" class="text-zinc-600 dark:text-zinc-200">
                 Все заявки
               </TabsTrigger>
-              <TabsTrigger
+              <!-- <TabsTrigger
                 value="unread"
                 class="text-zinc-600 dark:text-zinc-200"
               >
                 В архиве
-              </TabsTrigger>
+              </TabsTrigger> -->
             </TabsList>
           </div>
           <Separator />
@@ -208,11 +208,7 @@ function onExpand() {
                 <Search
                   class="absolute left-2 top-2.5 size-4 text-muted-foreground"
                 />
-                <Input
-                  v-model="searchValue"
-                  placeholder="Поиск"
-                  class="pl-8"
-                />
+                <Input v-model="searchValue" placeholder="Поиск" class="pl-8" />
               </div>
             </form>
           </div>

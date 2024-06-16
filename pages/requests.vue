@@ -65,10 +65,10 @@ const transformTicketsToAccountsAndMails = (
     id: ticket.id,
     name: ticket.full_name,
     email: `${ticket.full_name}@example.com`,
-    subject: `Request Type: ${ticket.type}`,
-    text: `Data: ${ticket.data}`,
+    subject: `Причина запроса: ${ticket.type}`,
+    text: `Внимание! Вам пришел запрос на ${ticket.data}`,
     date: ticket.created_at,
-    read: ticket.status === "Pending",
+    read: false,
     labels: [ticket.type, ticket.status],
   }));
 
