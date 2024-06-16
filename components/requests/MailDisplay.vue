@@ -11,7 +11,7 @@ import {
 } from "lucide-vue-next";
 import addDays from "date-fns/addDays";
 import addHours from "date-fns/addHours";
-import format from "date-fns";
+import format from "date-fns/format";
 import nextSaturday from "date-fns/nextSaturday";
 import type { Mail } from "@/data/mails";
 
