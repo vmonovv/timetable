@@ -1,62 +1,87 @@
 <script lang="ts" setup>
 import Mail from "@/components/requests/Mail.vue";
+import { accountss, mailss } from "@/data/mails";
 import { useTicketsList } from "~/stores/ticketsList.store";
 import { useAuthStore } from "~/stores/auth.store";
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
 
+// Использование магазинов состояния
 const ticketsListStore = useTicketsList();
 const authStore = useAuthStore();
-const tokenRef = ref("");
+const tokenRef = ref<string>("");
 
-const accounts = ref([]);
-const mails = ref([]);
+interface Account {
+  label: string;
+  email: string;
+  icon: string;
+}
+
+interface Mail {
+  id: string;
+  name: string;
+  email: string;
+  subject: string;
+  text: string;
+  date: string;
+  read: boolean;
+  labels: string[];
+}
+
+const accounts = ref<Account[]>([]);
+const mails = ref<Mail[]>([]);
+
+const transformedData = ref<{ accounts: Account[]; mails: Mail[] }>({
+  accounts: [],
+  mails: [],
+});
 
 onMounted(async () => {
   authStore.initialize();
   tokenRef.value = authStore.user.access_token;
   await ticketsListStore.fetchTicketListData();
-  console.log(ticketsListStore.tickets_list);
 
-  const transformTicketsToAccountsAndMails = (tickets) => {
-    if (!tickets || tickets.length === 0) {
-      return { accounts: [], mails: [] };
-    }
-
-    const accounts = tickets.map((ticket) => ({
-      id: ticket.id,
-      name: ticket.full_name,
-      email: `${ticket.full_name}@example.com`,
-      subject: `Request Type: ${ticket.type}`,
-      text: `Data: ${ticket.data}`,
-      date: ticket.created_at,
-      read: ticket.status === "Pending",
-      labels: [ticket.type, ticket.status],
-    }));
-
-    const mails = [
-      ...new Set(
-        tickets.map(
-          (ticket) =>
-            `${ticket.full_name.split(" ").join(".").toLowerCase()}@example.com`
-        )
-      ),
-    ].map((email) => ({
-      label: email.split("@")[0],
-      email: email,
-      icon: "mdi:email-outline",
-    }));
-
-    return { accounts, mails };
-  };
-
-  const transformedData = transformTicketsToAccountsAndMails(
+  transformedData.value = transformTicketsToAccountsAndMails(
     ticketsListStore.tickets_list
   );
-  accounts.value = transformedData.accounts;
-  mails.value = transformedData.mails;
-  console.log("Transformed Accounts:", accounts.value);
-  console.log("Transformed Mails:", mails.value);
+
+  // Заполняем accounts и mails на основе transformedData
+  accounts.value = transformedData.value.accounts;
+  mails.value = transformedData.value.mails;
+
+  console.log(accounts.value);
+  if (mails.value.length > 0) {
+    console.log(mails.value[0].id);
+  }
 });
+
+const transformTicketsToAccountsAndMails = (
+  tickets: any[]
+): { accounts: Account[]; mails: Mail[] } => {
+  if (!tickets || tickets.length === 0) {
+    return { accounts: [], mails: [] };
+  }
+
+  const mails: Mail[] = tickets.map((ticket) => ({
+    id: ticket.id,
+    name: ticket.full_name,
+    email: `${ticket.full_name}@example.com`,
+    subject: `Request Type: ${ticket.type}`,
+    text: `Data: ${ticket.data}`,
+    date: ticket.created_at,
+    read: ticket.status === "Pending",
+    labels: [ticket.type, ticket.status],
+  }));
+
+  const accounts: Account[] = [
+    ...new Set(tickets.map((ticket) => `${ticket.full_name}@example.com`)),
+  ].map((email) => ({
+    label: email.split("@")[0],
+    email: email,
+    icon: "mdi:email-outline",
+  }));
+
+  return { accounts, mails };
+};
 </script>
 
 <template>
@@ -78,6 +103,11 @@ onMounted(async () => {
     />
   </div>
   <div class="hidden flex-col md:flex">
-    <!-- <Mail :accounts="accounts" :mails="mails" :nav-collapsed-size="4" /> -->
+    <Mail
+      v-if="mails.length > 0"
+      :accounts="accounts"
+      :mails="mails"
+      :nav-collapsed-size="4"
+    />
   </div>
 </template>
