@@ -50,6 +50,12 @@ const table = useVueTable({
     get rowSelection() {
       return rowSelection.value;
     },
+    get pagination() {
+      return {
+        pageIndex: 0,
+        pageSize: 31, // Увеличьте это значение или установите на 50 для отображения большего количества строк на странице
+      };
+    },
   },
   enableRowSelection: true,
   onSortingChange: (updaterOrValue) => valueUpdater(updaterOrValue, sorting),
@@ -112,6 +118,6 @@ const table = useVueTable({
       </Table>
     </div>
 
-    <!-- <DataTablePagination class="pt-8" :table="table" />-->
+    <DataTablePagination class="pt-8" :table="table" />
   </div>
 </template>
